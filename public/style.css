@@ -28,6 +28,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    
 }
 
 h1,
@@ -81,9 +82,11 @@ a {
   justify-content: center;
   align-items: center;
 
-  width: 100%;
+  width: 97%;
 
   border-radius: 5px;
+
+  position: fixed;
 
   overflow: hidden;
   background: rgb(255, 255, 255);
@@ -93,6 +96,7 @@ a {
 
   border-bottom: var(--ui-shadow-border);
   box-shadow: var(--ui-shadow);
+  
 }
 
 .Message {
@@ -117,7 +121,7 @@ a {
   width: 100%;
   justify-content: space-around;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 20px 20px;
 }
 
 .NavButton {
@@ -139,6 +143,8 @@ a {
   text-transform: capitalize;
 
   box-shadow: 3px 3px 3px grey;
+
+  position: fixed;
 }
 
 .NavButton:hover {
@@ -162,7 +168,7 @@ a {
 .kanban-container {
   display: flex;
   flex-direction: row;
-  padding: 10px 0 10px 10px;
+  padding: 100px 0 40px 10px;
 }
 
 .kanban-column {

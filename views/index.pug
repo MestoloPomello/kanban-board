@@ -12,6 +12,11 @@ block layout-content
             li.card Carta 
           div.kanban-column-footer ProvaFooter
 
+        div.kanban-column
+        div.kanban-column
+        div.kanban-column
+        div.kanban-column
+
     div.NavButtons
       button(
         type='button'
@@ -27,7 +32,17 @@ block layout-content
       )
       
   script. 
+
+    var cardNum = 0;
+
     function newColumnDialog(){
       //alert("Prova");
       document.getElementById("newColumnDialog").show();
+    }
+
+    function addNewColumn(column, title, author, type, content){
+      var inputElem = document.createElement('card');
+      inputElem.id = 'Card' + cardNum;
+      inputElem.nodeName = 'Card' + cardNum;
+      cardNum++;
     }
