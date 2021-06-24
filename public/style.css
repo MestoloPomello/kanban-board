@@ -153,6 +153,12 @@ a {
     box-shadow: var(--ui-shadow);
 }
 
+.kanban {
+  display: flex;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
 .kanban-container {
   display: flex;
   flex-direction: row;

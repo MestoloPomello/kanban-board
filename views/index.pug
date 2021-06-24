@@ -3,11 +3,15 @@ extends layout
 block layout-content
   div.View
     h1.Banner Kanban Board
-    div.Message
-      div.Title
-        h3 Cristo Cristo Cristo
-        h1 Cristo Cristo Cristo
-      span.Details Cristo Cristo Cristo
+    div.kanban
+      div.kanban-container
+        div.kanban-column
+          div.kanban-column-header ProvaHeader
+          ul.kanban-column-list 
+            li.card Carta
+            li.card Carta 
+          div.kanban-column-footer ProvaFooter
+
     div.NavButtons
       button(
         type='button'
