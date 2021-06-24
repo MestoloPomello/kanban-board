@@ -26,7 +26,7 @@ app.set("view engine", "pug");
 app.use(express.static(path.join(__dirname, "public")));
 
 db.prepare("CREATE TABLE IF NOT EXISTS columns (titolo TEXT, stato TEXT)").run();
-db.prepare("CREATE TABLE IF NOT EXISTS tiles (titolo TEXT, autore TEXT, contenuto TEXT, tipo_messaggio TEXT, tipo_contenuto TEXT)").run();
+db.prepare("CREATE TABLE IF NOT EXISTS tiles (titolo TEXT, autore TEXT, contenuto TEXT, tipo_messaggio TEXT, tipo_contenuto TEXT, titoloColonna TEXT)").run();
 
 
 /**

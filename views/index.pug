@@ -4,16 +4,24 @@ block layout-content
   div.View
     h1.Banner Kanban Board
     div.kanban
-      div.kanban-container
+      div(id='con_inCorso').kanban-container
         div.kanban-column
-          div.kanban-column-header ProvaHeader
+          div.kanban-column-header Titolo Colonna
           ul.kanban-column-list 
-            li.card Carta
-            li.card Carta 
-          div.kanban-column-footer ProvaFooter
+            li.tile Tile
+            li.tile Tile 
+          div.kanban-column-footer In Corso
+        div.kanban-column
+        div.kanban-column
+        hr     
 
+      div(id='con_archiviato').kanban-container
         div.kanban-column
-        div.kanban-column
+          div.kanban-column-header Titolo Colonna
+          ul.kanban-column-list 
+            li.tile Tile
+            li.tile Tile 
+          div.kanban-column-footer Archiviato
         div.kanban-column
         div.kanban-column
 
@@ -32,17 +40,74 @@ block layout-content
       )
       
   script. 
+    const database = require("better-sqlite3");
+    const db = new database(`database/database.db`, { verbose: console.log });
 
-    var cardNum = 0;
+    var tileNum = 0;
 
     function newColumnDialog(){
       //alert("Prova");
       document.getElementById("newColumnDialog").show();
     }
 
-    function addNewColumn(column, title, author, type, content){
-      var inputElem = document.createElement('card');
-      inputElem.id = 'Card' + cardNum;
-      inputElem.nodeName = 'Card' + cardNum;
-      cardNum++;
+    function addNewTile(column, title, author, content_type, message_type, content){
+      var inputElem = document.createElement('tile');
+      inputElem.id = 'tile' + tileNum;
+      inputElem.nodeName = 'tile' + tileNum;
+      tileNum++;
+    }
+
+    function loadColumns(){
+      var columnList = db.prepare("SELECT * FROM columns").all();
+      columnList.forEach(column => {
+        var title = column.titolo;
+        if (column.stato === 'in corso'){
+          var container = document.getElementById('con_inCorso');
+
+          var newHeader = document.createElement('header_' + title);
+          newHeader.className = 'kanban-header';
+          newHeader.innerHTML = title;
+
+          var newColumn = document.createElement('col_' + title);
+          newColumn.className = 'kanban-column';
+
+          var newFooter = document.createElement('footer_' + title);
+          newFooter.className = 'kanban-footer';
+          newFooter.innerHTML = 'In Corso';
+
+          document.getElementById('con_inCorso').appendChild(newHeader);
+          document.getElementById('con_inCorso').appendChild(newColumn);
+          document.getElementById('con_inCorso').appendChild(newFooter);
+
+          var columnList = db.prepare("SELECT * FROM tiles WHERE titoloColonna=?").all(title);
+          columnList.forEach(tile => {
+            addNewTile(title, tile.titolo, tile.author, tile.tipo_contenuto,
+             tile.tipo_messaggio, tile.contenuto);
+          })
+        }
+        else {
+          var container = document.getElementById('con_archiviato');
+
+          var newHeader = document.createElement('header_' + title);
+          newHeader.className = 'kanban-header';
+          newHeader.innerHTML = title;
+
+          var newColumn = document.createElement('col_' + title);
+          newColumn.className = 'kanban-column';
+
+          var newFooter = document.createElement('footer_' + title);
+          newFooter.className = 'kanban-footer';
+          newFooter.innerHTML = 'Archiviato';
+
+          document.getElementById('con_archiviato').appendChild(newHeader);
+          document.getElementById('con_archiviato').appendChild(newColumn);
+          document.getElementById('con_archiviato').appendChild(newFooter);
+
+          var columnList = db.prepare("SELECT * FROM tiles WHERE titoloColonna=?").all(title);
+          columnList.forEach(tile => {
+            addNewTile(title, tile.titolo, tile.author, tile.tipo_contenuto,
+             tile.tipo_messaggio, tile.contenuto);
+          })
+        }
+      })
     }
