@@ -1,0 +1,29 @@
+extends layout
+
+block layout-content
+  div.View
+    h1.Banner Kanban Board
+    div.Message
+      div.Title
+        h3 Cristo Cristo Cristo
+        h1 Cristo Cristo Cristo
+      span.Details Cristo Cristo Cristo
+    div.NavButtons
+      button(
+        type='button'
+        class='NavButton'
+        onclick='newColumnDialog()'
+        ) Crea Nuova Colonna
+
+    div.NewColumnDialog(style="display:none" id="newColumnDialog")
+      label(for="columnTitle") Titolo: 
+      input(
+        type="text"
+        id="columnTitle"
+      )
+      
+  script. 
+    function newColumnDialog(){
+      //alert("Prova");
+      document.getElementById("newColumnDialog").show();
+    }
