@@ -82,21 +82,20 @@ block layout-content
       var newFooter = document.createElement('div');
       newFooter.className = 'kanban-column-footer';
       newFooter.setAttribute("id", "footer_" + title);
-      newFooter.innerHTML = state;
-
-      var newButton = document.createElement('button');
-      newButton.className = 'btn-add-tile';
-      newButton.setAttribute("id", "btn_" + title);
-      newButton.innerHTML = 'Aggiungi Tile';
-      //newButton.appendChild(document.createTextNode("Aggiungi Tile"));
+      newFooter.innerHTML = state;      
     
       newColumn.appendChild(newHeader);
       newColumn.appendChild(newList);
       newColumn.appendChild(newFooter);
-      newColumn.appendChild(newButton);
-      
-      if (type === 'in corso')
-        container.insertBefore(newColumn, document.getElementById('sep'));      
+
+      if (type === 'in corso'){
+        var newButton = document.createElement('button');
+        newButton.className = 'btn-add-tile';
+        newButton.setAttribute("id", "btn_" + title);
+        newButton.innerHTML = 'Aggiungi Tile';
+        newColumn.appendChild(newButton);
+        container.insertBefore(newColumn, document.getElementById('sep'));    
+      }  
       else
         container.appendChild(newColumn);
     }
