@@ -147,7 +147,7 @@ a {
   box-shadow: 2px 2px 2px rgb(190, 190, 190);
 
   position: fixed;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .NavButton:hover {
@@ -219,4 +219,19 @@ a {
 
 .tile:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-add-tile {
+  padding: 10px ;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(151, 255, 151);
+  cursor: pointer;
+  border-style: solid;
+  border-color: rgb(97, 255, 97);
+  font-family: "Raleway", sans-serif;
+}
+
+.btn-add-tile:hover {
+  background-color: rgb(97, 255, 97);
 }

@@ -43,7 +43,7 @@ block layout-content
     var tileNum = 0;
 
     function newColumnDialog(){
-      addNewColumn('Paolo', 'in corso');
+      addNewColumn('Paolo Brosio', 'in corso');
     }
 
     function addNewTile(column, title, author, content_type, message_type, content){
@@ -68,22 +68,37 @@ block layout-content
 
       var newHeader = document.createElement('div');
       newHeader.className = 'kanban-column-header';
+      newHeader.setAttribute("id", "header_" + title);
       newHeader.innerHTML = title;
 
       var newColumn = document.createElement('div');
       newColumn.className = 'kanban-column';
+      newColumn.setAttribute("id", "col_" + title);
 
       var newList = document.createElement('ul');
       newList.className = 'kanban-column-list';
+      newList.setAttribute("id", "list_" + title);
 
       var newFooter = document.createElement('div');
       newFooter.className = 'kanban-column-footer';
+      newFooter.setAttribute("id", "footer_" + title);
       newFooter.innerHTML = state;
 
+      var newButton = document.createElement('button');
+      newButton.className = 'btn-add-tile';
+      newButton.setAttribute("id", "btn_" + title);
+      newButton.innerHTML = 'Aggiungi Tile';
+      //newButton.appendChild(document.createTextNode("Aggiungi Tile"));
+    
       newColumn.appendChild(newHeader);
       newColumn.appendChild(newList);
       newColumn.appendChild(newFooter);
-      container.insertBefore(newColumn, document.getElementById('sep'));      
+      newColumn.appendChild(newButton);
+      
+      if (type === 'in corso')
+        container.insertBefore(newColumn, document.getElementById('sep'));      
+      else
+        container.appendChild(newColumn);
     }
 
     function loadColumns(){
