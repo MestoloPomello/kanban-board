@@ -13,8 +13,7 @@ block layout-content
           div.kanban-column-footer In Corso
         div.kanban-column
         div.kanban-column
-        hr     
-
+        hr(id='sep')
       div(id='con_archiviato').kanban-container
         div.kanban-column
           div.kanban-column-header Titolo Colonna
@@ -39,15 +38,12 @@ block layout-content
         id="columnTitle"
       )
       
-  script. 
-    const database = require("better-sqlite3");
-    const db = new database(`database/database.db`, { verbose: console.log });
-
+  script.
+    
     var tileNum = 0;
 
     function newColumnDialog(){
-      //alert("Prova");
-      document.getElementById("newColumnDialog").show();
+      addNewColumn('Paolo', 'in corso');
     }
 
     function addNewTile(column, title, author, content_type, message_type, content){
@@ -55,6 +51,39 @@ block layout-content
       inputElem.id = 'tile' + tileNum;
       inputElem.nodeName = 'tile' + tileNum;
       tileNum++;
+    }
+
+    function addNewColumn(title, type){
+      if (type === 'in corso'){
+        var strContainer = 'con_inCorso';
+        var state = 'In Corso';
+      }
+      else {
+        var strContainer = 'con_archiviato';
+        var state = 'Archiviato';
+      }
+      var container = document.getElementById(strContainer);
+      //var columnList = db.prepare("INSERT INTO columns (titolo, stato) VALUES (?, ?)")
+      //  .run(title, type);
+
+      var newHeader = document.createElement('div');
+      newHeader.className = 'kanban-column-header';
+      newHeader.innerHTML = title;
+
+      var newColumn = document.createElement('div');
+      newColumn.className = 'kanban-column';
+
+      var newList = document.createElement('ul');
+      newList.className = 'kanban-column-list';
+
+      var newFooter = document.createElement('div');
+      newFooter.className = 'kanban-column-footer';
+      newFooter.innerHTML = state;
+
+      newColumn.appendChild(newHeader);
+      newColumn.appendChild(newList);
+      newColumn.appendChild(newFooter);
+      container.insertBefore(newColumn, document.getElementById('sep'));      
     }
 
     function loadColumns(){
