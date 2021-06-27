@@ -15,7 +15,7 @@ block layout-content
         onclick='openAddColumnForm()'
         ) Crea Nuova Colonna
 
-    div.form-popup(id='addColumnForm')
+    div.form-popup-add-column(id='addColumnForm')
       form(action='/addNewColumn' method='GET') 
         h2 Aggiungi Colonna
         br
@@ -30,9 +30,9 @@ block layout-content
         br
         br
         input(type='submit' class='btn-add-tile' value='Crea Colonna' onclick='closeAddColumnForm()')
-        input(type='button' class='btn-add-tile' value='Annulla' onclick='closeAddColumnForm()')
+        input(type='button' class='btn-delete-column' value='Annulla' onclick='closeAddColumnForm()')
 
-    div.form-popup(id='addTileForm')
+    div.form-popup-add-column(id='addTileForm')
       form(action='/addNewTile' method='GET') 
         h2 Aggiungi Tile
         br
@@ -120,15 +120,27 @@ block layout-content
       newColumn.appendChild(newList);
       newColumn.appendChild(newFooter);
 
+      var newHiddenTitle = document.createElement('input');
+      newHiddenTitle.setAttribute("type", "hidden");
+      newHiddenTitle.setAttribute("value", title);
+      newHiddenTitle.setAttribute("name", "tileColumnTitle");
+
+      var newEditForm = document.createElement('form');
+      newEditForm.setAttribute("method", "get");
+      newEditForm.setAttribute("action", "/editColumn");
+      newEditForm.appendChild(newHiddenTitle);
+
+      var newEditColumnButton = document.createElement('button');
+      newEditColumnButton.className = 'btn-edit-column';
+      newEditColumnButton.setAttribute("id", "btn_edit_" + title);
+      newEditColumnButton.setAttribute("type", "submit");
+      newEditColumnButton.innerHTML = 'Modifica Colonna';
+      newEditForm.appendChild(newEditColumnButton);     
+
       if (type === 'in corso'){
         var newAddForm = document.createElement('form');
         newAddForm.setAttribute("method", "get");
-        newAddForm.setAttribute("action", "/addNewTile");
-
-        var newHiddenTitle = document.createElement('input');
-        newHiddenTitle.setAttribute("type", "hidden");
-        newHiddenTitle.setAttribute("value", title);
-        newHiddenTitle.setAttribute("name", "tileColumnTitle");
+        newAddForm.setAttribute("action", "/addNewTile");        
         newAddForm.appendChild(newHiddenTitle);
 
         var newAddTileButton = document.createElement('button');
@@ -139,6 +151,7 @@ block layout-content
         newAddForm.appendChild(newAddTileButton);
         newColumn.appendChild(newAddForm);
 
+        newColumn.appendChild(newEditForm);
 
         var newDeleteForm = document.createElement('form');
         newDeleteForm.setAttribute("method", "get");
@@ -155,8 +168,10 @@ block layout-content
 
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  
-      else
+      else{
+        newColumn.appendChild(newEditForm);
         container.appendChild(newColumn);
+      }
     }
 
     function loadColumns(){
