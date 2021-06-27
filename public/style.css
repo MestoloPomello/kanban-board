@@ -236,6 +236,7 @@ a {
   background-color: rgb(97, 255, 97);
 }
 
+/* The popup form - hidden by default */
 .form-popup {
   display: none;
   margin: auto;
