@@ -1,7 +1,7 @@
 extends layout
 
 block layout-content
-  div.View
+  div.View(id='view')
     h1.Banner Kanban Board
     div.kanban
       div(id='con_inCorso').kanban-container
@@ -15,7 +15,7 @@ block layout-content
         onclick='openAddColumnForm()'
         ) Crea Nuova Colonna
 
-    div.form-popup(id='addColumnForm')
+    div.form-popup-add-column(id='addColumnForm')
       form(action='/addNewColumn' method='GET') 
         h2 Aggiungi Colonna
         br
@@ -30,7 +30,7 @@ block layout-content
         br
         br
         input(type='submit' class='btn-add-tile' value='Crea Colonna' onclick='closeAddColumnForm()')
-        input(type='button' class='btn-add-tile' value='Annulla' onclick='closeAddColumnForm()')
+        input(type='button' class='btn-delete-column' value='Annulla' onclick='closeAddColumnForm()')
       
   script.
     
@@ -88,27 +88,62 @@ block layout-content
 
           newTile.innerHTML = 
             '<b>Titolo:</b> ' + tile.titolo +
-            '<b>Autore:</b> ' + tile.autore +
-            '<b>Contenuto:</b> ' + tile.contenuto +
-            '<b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
+            '<br><b>Autore:</b> ' + tile.autore +
+            '<br><b>Contenuto:</b> ' + tile.contenuto +
+            '<br><b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
 
-          newList.appendChild(tile);
+          newList.appendChild(newTile);
         }
       })
 
       newColumn.appendChild(newList);
       newColumn.appendChild(newFooter);
 
+      var newHiddenTitle = document.createElement('input');
+      newHiddenTitle.setAttribute("type", "hidden");
+      newHiddenTitle.setAttribute("value", title);
+      newHiddenTitle.setAttribute("name", "tileColumnTitle");
+
+      var newEditForm = document.createElement('form');
+      newEditForm.setAttribute("method", "get");
+      newEditForm.setAttribute("action", "/editColumn");
+      newEditForm.appendChild(newHiddenTitle);
+
+      var newEditColumnButton = document.createElement('button');
+      newEditColumnButton.className = 'btn-edit-column';
+      newEditColumnButton.setAttribute("id", "btn_edit_" + title);
+      newEditColumnButton.setAttribute("type", "submit");
+      newEditColumnButton.innerHTML = 'Modifica Colonna';
+      newEditForm.appendChild(newEditColumnButton);     
+
       if (type === 'in corso'){
-        var newButton = document.createElement('button');
-        newButton.className = 'btn-add-tile';
-        newButton.setAttribute("id", "btn_" + title);
-        newButton.innerHTML = 'Aggiungi Tile';
-        newColumn.appendChild(newButton);
+        var newAddForm = document.createElement('button');
+        newAddForm.setAttribute("onclick", "openAddTileForm(\"" + title + "\")");
+        newAddForm.className = 'btn-add-tile';
+        newAddForm.innerHTML = "Aggiungi Tile";    
+        newColumn.appendChild(newAddForm);
+
+        newColumn.appendChild(newEditForm);
+
+        var newDeleteForm = document.createElement('form');
+        newDeleteForm.setAttribute("method", "get");
+        newDeleteForm.setAttribute("action", "/deleteColumn");
+        newDeleteForm.appendChild(newHiddenTitle);
+
+        var newDeleteColumnButton = document.createElement('button');
+        newDeleteColumnButton.className = 'btn-delete-column';
+        newDeleteColumnButton.setAttribute("id", "btn_delete_" + title);
+        newDeleteColumnButton.setAttribute("type", "submit");
+        newDeleteColumnButton.innerHTML = 'Rimuovi Colonna';
+        newDeleteForm.appendChild(newDeleteColumnButton);
+        newColumn.appendChild(newDeleteForm);
+
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  
-      else
+      else{
+        newColumn.appendChild(newEditForm);
         container.appendChild(newColumn);
+      }
     }
 
     function loadColumns(){
@@ -125,4 +160,77 @@ block layout-content
 
     function closeAddColumnForm(){
       document.getElementById("addColumnForm").style.display = "none";
+    }
+
+    function openAddTileForm(columnTitle){
+      var addTileForm = document.createElement("form");
+      addTileForm.className = "form-popup-add-tile";
+      addTileForm.setAttribute("method", "get");
+      addTileForm.setAttribute("action", "/addNewTile");
+      addTileForm.setAttribute("id", "addTileForm" + columnTitle);
+
+      var hiddenTitle = document.createElement('input');
+      hiddenTitle.setAttribute("type", "hidden");
+      hiddenTitle.setAttribute("value", columnTitle);
+      hiddenTitle.setAttribute("name", "tileColumnTitle");
+      addTileForm.appendChild(hiddenTitle);
+
+      var tileTitle = document.createElement('input');
+      tileTitle.setAttribute("type", "text");
+      tileTitle.setAttribute("name", "tileTitle");
+      tileTitle.setAttribute("placeholder", "Titolo");
+      addTileForm.appendChild(tileTitle);
+
+      var tileAuthor = document.createElement('input');
+      tileAuthor.setAttribute("type", "text");
+      tileAuthor.setAttribute("name", "tileAuthor");
+      tileAuthor.setAttribute("placeholder", "Autore");
+      addTileForm.appendChild(tileAuthor); 
+
+      var tileContent = document.createElement('input');
+      tileContent.setAttribute("type", "text");
+      tileContent.setAttribute("name", "tileContent");
+      tileContent.setAttribute("placeholder", "Contenuto");
+      addTileForm.appendChild(tileContent); 
+
+      var tileMessageType = document.createElement('select');
+      tileMessageType.setAttribute("name", "tileMessageType");
+      var optOrganizzativo = document.createElement("option");
+      optOrganizzativo.value = "organizzativo";
+      optOrganizzativo.text = "organizzativo";
+      tileMessageType.appendChild(optOrganizzativo);
+      var optInformativo = document.createElement("option");
+      optInformativo.value = "informativo";
+      optInformativo.text = "informativo";
+      tileMessageType.appendChild(optInformativo);
+      addTileForm.appendChild(tileMessageType);
+
+      var tileSubmit = document.createElement('button');
+      tileSubmit.className = 'btn-add-tile';
+      tileSubmit.setAttribute("type", "submit");
+      tileSubmit.setAttribute("onclick", "closeAddTileForm(\"" + columnTitle +"\")");
+      tileSubmit.innerHTML = "Crea Tile";
+      addTileForm.appendChild(tileSubmit);
+
+      var tileCancel = document.createElement('button');
+      tileCancel.className = 'btn-delete-column';
+      tileCancel.setAttribute("onclick", "closeAddTileForm(\"" + columnTitle +"\")");
+      tileCancel.setAttribute("type", "button");
+      tileCancel.innerHTML = "Annulla";
+      addTileForm.appendChild(tileCancel);
+
+      document.getElementById("view").appendChild(addTileForm);
+      document.getElementById("addTileForm" + columnTitle).style.display = "block";
+    }
+
+    function closeAddTileForm(columnTitle){
+      document.getElementById("addTileForm" + columnTitle).style.display = "none";
+    }
+
+    function openEditColumnForm(){
+      document.getElementById("editColumnForm").style.display = "none";
+    }
+
+    function closeEditColumnForm(){
+      document.getElementById("editColumnForm").style.display = "none";
     }

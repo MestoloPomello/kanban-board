@@ -230,14 +230,47 @@ a {
   border-style: solid;
   border-color: rgb(97, 255, 97);
   font-family: "Raleway", sans-serif;
+  width: 100%;
 }
 
 .btn-add-tile:hover {
   background-color: rgb(97, 255, 97);
 }
 
+.btn-delete-column {
+  padding: 10px ;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(255, 87, 75);
+  cursor: pointer;
+  border-style: solid;
+  border-color: rgb(238, 37, 37);
+  font-family: "Raleway", sans-serif;
+  width: 100%;
+}
+
+.btn-delete-column:hover {
+  background-color: rgb(238, 37, 37);
+}
+
+.btn-edit-column {
+  padding: 10px ;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(169, 121, 248);
+  cursor: pointer;
+  border-style: solid;
+  border-color: rgb(129, 58, 245);
+  font-family: "Raleway", sans-serif;
+  width: 100%;
+}
+
+.btn-edit-column:hover {
+  background-color: rgb(129, 58, 245);
+}
+
 /* The popup form - hidden by default */
-.form-popup {
+.form-popup-add-column {
   display: none;
   margin: auto;
   border: 1px solid #afafaf;
@@ -249,7 +282,24 @@ a {
   top:50%;
   left:50%;
   width:300px;  /* adjust as per your needs */
-  height:220px;   /* adjust as per your needs */
+  height:250px;   /* adjust as per your needs */
   margin-left:-150px;   /* negative half of width above */
-  margin-top:-110px;   /* negative half of height above */
+  margin-top:-125px;   /* negative half of height above */
+}
+
+.form-popup-add-tile {
+  display: none;
+  margin: auto;
+  border: 1px solid #afafaf;
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 20px;
+
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:300px;  /* adjust as per your needs */
+  height:250px;   /* adjust as per your needs */
+  margin-left:-150px;   /* negative half of width above */
+  margin-top:-125px;   /* negative half of height above */
 }

@@ -57,9 +57,19 @@ app.get('/addNewColumn', function(req, res) {
 })
 
 app.get('/addNewTile', function(req, res) {
-  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna)' +
-    'VALUES (?, ?, ?, ?, ?, ?))').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
+  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
+    'VALUES (?, ?, ?, ?, ?, ?)').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
     req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
+
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
+})
+
+app.get('/deleteColumn', function(req, res) {
+  db.prepare('DELETE FROM tiles WHERE titoloColonna=?').run(req.query.tileColumnTitle);
+  db.prepare('DELETE FROM columns WHERE titolo=?').run(req.query.tileColumnTitle);
 
   var qryColumns = db.prepare('SELECT * FROM columns').all();
   var qryTiles = db.prepare('SELECT * FROM tiles').all();
