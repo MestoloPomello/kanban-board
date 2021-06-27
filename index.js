@@ -67,6 +67,16 @@ app.get('/addNewTile', function(req, res) {
     tiles: JSON.stringify(qryTiles) });
 })
 
+app.get('/deleteColumn', function(req, res) {
+  db.prepare('DELETE FROM tiles WHERE titoloColonna=?').run(req.query.tileColumnTitle);
+  db.prepare('DELETE FROM columns WHERE titolo=?').run(req.query.tileColumnTitle);
+
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
+})
+
 
 /**
  * Server Activation

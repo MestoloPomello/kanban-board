@@ -230,10 +230,27 @@ a {
   border-style: solid;
   border-color: rgb(97, 255, 97);
   font-family: "Raleway", sans-serif;
+  width: 100%;
 }
 
 .btn-add-tile:hover {
   background-color: rgb(97, 255, 97);
+}
+
+.btn-delete-column {
+  padding: 10px ;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(255, 87, 75);
+  cursor: pointer;
+  border-style: solid;
+  border-color: rgb(238, 37, 37);
+  font-family: "Raleway", sans-serif;
+  width: 100%;
+}
+
+.btn-delete-column:hover {
+  background-color: rgb(238, 37, 37);
 }
 
 /* The popup form - hidden by default */
