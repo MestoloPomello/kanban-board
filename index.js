@@ -41,8 +41,6 @@ app.get("/", (req, res) => {
 });
 
 app.get('/addNewColumn', function(req, res) {
-  //req.body contiene i parametri del form in input, in formato JSON
-  // title, type
   try{
     db.prepare('INSERT INTO columns VALUES (?, ?)').run(req.query.colTitle, req.query.colType);
   } catch (error){
@@ -55,7 +53,12 @@ app.get('/addNewColumn', function(req, res) {
 })
 
 app.get('/addNewTile', function(req, res) {
-  
+  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna)' +
+    'VALUES (?, ?, ?, ?, ?, ?))').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
+      req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
+
+  var qryRes = db.prepare('SELECT * FROM columns').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
 })
 
 
