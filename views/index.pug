@@ -1,7 +1,7 @@
 extends layout
 
 block layout-content
-  div.View
+  div.View(id='view')
     h1.Banner Kanban Board
     div.kanban
       div(id='con_inCorso').kanban-container
@@ -31,27 +31,6 @@ block layout-content
         br
         input(type='submit' class='btn-add-tile' value='Crea Colonna' onclick='closeAddColumnForm()')
         input(type='button' class='btn-delete-column' value='Annulla' onclick='closeAddColumnForm()')
-
-    div.form-popup-add-column(id='addTileForm')
-      form(action='/addNewTile' method='GET') 
-        h2 Aggiungi Tile
-        br
-        | Titolo: 
-        input(type='text', name='tileTitle', placeholder='Colonna' required)
-        br
-        br
-        | Stato: 
-        select(name='tileMessageType')
-          option(value='organizzativo') In Corso
-          option(value='informativo') Archiviato
-        br
-        br
-        | Autore: 
-        input(type='text', name='tileAuthor', placeholder='Autore' required)
-        br
-        br
-        input(type='submit' class='btn-add-tile' value='Crea Tile' onclick='closeAddTileForm()')
-        input(type='button' class='btn-add-tile' value='Annulla' onclick='closeAddTileForm()')
       
   script.
     
@@ -108,12 +87,12 @@ block layout-content
           newTile.setAttribute("id", "tile_" + tile.id)
 
           newTile.innerHTML = 
-            '\n<b>Titolo:</b> ' + tile.titolo +
-            '\n<b>Autore:</b> ' + tile.autore +
-            '\n<b>Contenuto:</b> ' + tile.contenuto +
-            '\n<b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
+            '<b>Titolo:</b> ' + tile.titolo +
+            '<br><b>Autore:</b> ' + tile.autore +
+            '<br><b>Contenuto:</b> ' + tile.contenuto +
+            '<br><b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
 
-          newList.appendChild(tile);
+          newList.appendChild(newTile);
         }
       })
 
@@ -138,17 +117,10 @@ block layout-content
       newEditForm.appendChild(newEditColumnButton);     
 
       if (type === 'in corso'){
-        var newAddForm = document.createElement('form');
-        newAddForm.setAttribute("method", "get");
-        newAddForm.setAttribute("action", "/addNewTile");        
-        newAddForm.appendChild(newHiddenTitle);
-
-        var newAddTileButton = document.createElement('button');
-        newAddTileButton.className = 'btn-add-tile';
-        newAddTileButton.setAttribute("id", "btn_add_" + title);
-        newAddTileButton.setAttribute("type", "submit");
-        newAddTileButton.innerHTML = 'Aggiungi Tile';
-        newAddForm.appendChild(newAddTileButton);
+        var newAddForm = document.createElement('button');
+        newAddForm.setAttribute("onclick", "openAddTileForm(\"" + title + "\")");
+        newAddForm.className = 'btn-add-tile';
+        newAddForm.innerHTML = "Aggiungi Tile";    
         newColumn.appendChild(newAddForm);
 
         newColumn.appendChild(newEditForm);
@@ -190,10 +162,74 @@ block layout-content
       document.getElementById("addColumnForm").style.display = "none";
     }
 
-    function openAddTileForm(){
-      document.getElementById("addTileForm").style.display = "block";
+    function openAddTileForm(columnTitle){
+      var addTileForm = document.createElement("form");
+      addTileForm.className = "form-popup-add-tile";
+      addTileForm.setAttribute("method", "get");
+      addTileForm.setAttribute("action", "/addNewTile");
+      addTileForm.setAttribute("id", "addTileForm" + columnTitle);
+
+      var hiddenTitle = document.createElement('input');
+      hiddenTitle.setAttribute("type", "hidden");
+      hiddenTitle.setAttribute("value", columnTitle);
+      hiddenTitle.setAttribute("name", "tileColumnTitle");
+      addTileForm.appendChild(hiddenTitle);
+
+      var tileTitle = document.createElement('input');
+      tileTitle.setAttribute("type", "text");
+      tileTitle.setAttribute("name", "tileTitle");
+      tileTitle.setAttribute("placeholder", "Titolo");
+      addTileForm.appendChild(tileTitle);
+
+      var tileAuthor = document.createElement('input');
+      tileAuthor.setAttribute("type", "text");
+      tileAuthor.setAttribute("name", "tileAuthor");
+      tileAuthor.setAttribute("placeholder", "Autore");
+      addTileForm.appendChild(tileAuthor); 
+
+      var tileContent = document.createElement('input');
+      tileContent.setAttribute("type", "text");
+      tileContent.setAttribute("name", "tileContent");
+      tileContent.setAttribute("placeholder", "Contenuto");
+      addTileForm.appendChild(tileContent); 
+
+      var tileMessageType = document.createElement('select');
+      tileMessageType.setAttribute("name", "tileMessageType");
+      var optOrganizzativo = document.createElement("option");
+      optOrganizzativo.value = "organizzativo";
+      optOrganizzativo.text = "organizzativo";
+      tileMessageType.appendChild(optOrganizzativo);
+      var optInformativo = document.createElement("option");
+      optInformativo.value = "informativo";
+      optInformativo.text = "informativo";
+      tileMessageType.appendChild(optInformativo);
+      addTileForm.appendChild(tileMessageType);
+
+      var tileSubmit = document.createElement('button');
+      tileSubmit.className = 'btn-add-tile';
+      tileSubmit.setAttribute("type", "submit");
+      tileSubmit.setAttribute("onclick", "closeAddTileForm(\"" + columnTitle +"\")");
+      tileSubmit.innerHTML = "Crea Tile";
+      addTileForm.appendChild(tileSubmit);
+
+      var tileCancel = document.createElement('button');
+      tileCancel.className = 'btn-delete-column';
+      tileCancel.setAttribute("onclick", "closeAddTileForm(\"" + columnTitle +"\")");
+      tileCancel.innerHTML = "Annulla";
+      addTileForm.appendChild(tileCancel);
+
+      document.getElementById("view").appendChild(addTileForm);
+      document.getElementById("addTileForm" + columnTitle).style.display = "block";
     }
 
-    function closeAddTileForm(){
-      document.getElementById("addTileForm").style.display = "none";
+    function closeAddTileForm(columnTitle){
+      document.getElementById("addTileForm" + columnTitle).style.display = "none";
+    }
+
+    function openEditColumnForm(){
+      document.getElementById("editColumnForm").style.display = "none";
+    }
+
+    function closeEditColumnForm(){
+      document.getElementById("editColumnForm").style.display = "none";
     }

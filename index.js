@@ -57,8 +57,8 @@ app.get('/addNewColumn', function(req, res) {
 })
 
 app.get('/addNewTile', function(req, res) {
-  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna)' +
-    'VALUES (?, ?, ?, ?, ?, ?))').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
+  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
+    'VALUES (?, ?, ?, ?, ?, ?)').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
     req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
 
   var qryColumns = db.prepare('SELECT * FROM columns').all();
