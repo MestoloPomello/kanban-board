@@ -43,10 +43,15 @@ app.get("/", (req, res) => {
 app.get('/addNewColumn', function(req, res) {
   //req.body contiene i parametri del form in input, in formato JSON
   // title, type
-  db.prepare('INSERT INTO columns VALUES (?, ?)').run(req.query.colTitle, req.query.colType);
-
-  var qryRes = db.prepare('SELECT * FROM columns').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
+  try{
+    db.prepare('INSERT INTO columns VALUES (?, ?)').run(req.query.colTitle, req.query.colType);
+  } catch (error){
+    alert('Attenzione: il nome della colonna dev\'essere univoco.');
+  }
+  finally{
+    var qryRes = db.prepare('SELECT * FROM columns').all();
+    res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
+  }
 })
 
 app.get('/addNewTile', function(req, res) {
