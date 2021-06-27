@@ -215,6 +215,7 @@ block layout-content
       var tileCancel = document.createElement('button');
       tileCancel.className = 'btn-delete-column';
       tileCancel.setAttribute("onclick", "closeAddTileForm(\"" + columnTitle +"\")");
+      tileCancel.setAttribute("type", "button");
       tileCancel.innerHTML = "Annulla";
       addTileForm.appendChild(tileCancel);
 
