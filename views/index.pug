@@ -34,7 +34,6 @@ block layout-content
       
   script.
     
-    var tileNum = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
       loadColumns();
@@ -77,6 +76,26 @@ block layout-content
       newFooter.innerHTML = state;      
     
       newColumn.appendChild(newHeader);
+
+      // Qui appendere i tiles alla lista
+      var tiles = "#{tiles}";
+      var tileList = JSON.parse(tiles.replace(/&quot;/g, '"'));
+      tileList.forEach(tile => {
+        if (tile.titoloColonna === title){
+          var newTile = document.createElement('li');
+          newTile.className = 'tile';
+          newTile.setAttribute("id", "tile_" + tile.id)
+
+          newTile.innerHTML = 
+            '<b>Titolo:</b> ' + tile.titolo +
+            '<b>Autore:</b> ' + tile.autore +
+            '<b>Contenuto:</b> ' + tile.contenuto +
+            '<b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
+
+          newList.appendChild(tile);
+        }
+      })
+
       newColumn.appendChild(newList);
       newColumn.appendChild(newFooter);
 
@@ -93,7 +112,6 @@ block layout-content
     }
 
     function loadColumns(){
-      console.log("#{columns}");
       var columns = "#{columns}";
       var columnList = JSON.parse(columns.replace(/&quot;/g, '"'));
       columnList.forEach(column => {

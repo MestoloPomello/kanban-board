@@ -36,29 +36,35 @@ db.prepare("CREATE TABLE IF NOT EXISTS tiles (id INTEGER PRIMARY KEY AUTOINCREME
  */
 
 app.get("/", (req, res) => {
-  var qryRes = db.prepare('SELECT * FROM columns').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
 });
 
 app.get('/addNewColumn', function(req, res) {
   try{
     db.prepare('INSERT INTO columns VALUES (?, ?)').run(req.query.colTitle, req.query.colType);
   } catch (error){
-    alert('Attenzione: il nome della colonna dev\'essere univoco.');
+    console.log('Attenzione: il nome della colonna dev\'essere univoco.');
   }
   finally{
-    var qryRes = db.prepare('SELECT * FROM columns').all();
-    res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
+    var qryColumns = db.prepare('SELECT * FROM columns').all();
+    var qryTiles = db.prepare('SELECT * FROM tiles').all();
+    res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+      tiles: JSON.stringify(qryTiles) });
   }
 })
 
 app.get('/addNewTile', function(req, res) {
   db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna)' +
     'VALUES (?, ?, ?, ?, ?, ?))').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
-      req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
+    req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
 
-  var qryRes = db.prepare('SELECT * FROM columns').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryRes) });
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
 })
 
 
