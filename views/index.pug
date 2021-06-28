@@ -104,17 +104,11 @@ block layout-content
       newHiddenTitle.setAttribute("value", title);
       newHiddenTitle.setAttribute("name", "tileColumnTitle");
 
-      var newEditForm = document.createElement('form');
-      newEditForm.setAttribute("method", "get");
-      newEditForm.setAttribute("action", "/editColumn");
-      newEditForm.appendChild(newHiddenTitle);
-
       var newEditColumnButton = document.createElement('button');
       newEditColumnButton.className = 'btn-edit-column';
       newEditColumnButton.setAttribute("id", "btn_edit_" + title);
-      newEditColumnButton.setAttribute("type", "submit");
+      newEditColumnButton.setAttribute("onclick", "openEditColumnForm(\""+ title +"\")");
       newEditColumnButton.innerHTML = 'Modifica Colonna';
-      newEditForm.appendChild(newEditColumnButton);     
 
       if (type === 'in corso'){
         var newAddForm = document.createElement('button');
@@ -123,7 +117,7 @@ block layout-content
         newAddForm.innerHTML = "Aggiungi Tile";    
         newColumn.appendChild(newAddForm);
 
-        newColumn.appendChild(newEditForm);
+        newColumn.appendChild(newEditColumnButton);
 
         var newDeleteForm = document.createElement('form');
         newDeleteForm.setAttribute("method", "get");
@@ -141,7 +135,7 @@ block layout-content
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  
       else{
-        newColumn.appendChild(newEditForm);
+        newColumn.appendChild(newEditColumnButton);
         container.appendChild(newColumn);
       }
     }
@@ -174,6 +168,10 @@ block layout-content
       hiddenTitle.setAttribute("value", columnTitle);
       hiddenTitle.setAttribute("name", "tileColumnTitle");
       addTileForm.appendChild(hiddenTitle);
+
+      var addTileH2 = document.createElement('h2');
+      addTileH2.innerHTML = "<center>Aggiungi Tile</center><br>";
+      addTileForm.appendChild(addTileH2);
 
       var tileTitle = document.createElement('input');
       tileTitle.setAttribute("type", "text");
@@ -227,10 +225,55 @@ block layout-content
       document.getElementById("addTileForm" + columnTitle).style.display = "none";
     }
 
-    function openEditColumnForm(){
-      document.getElementById("editColumnForm").style.display = "none";
+    function openEditColumnForm(columnTitle){
+      var editColumnForm = document.createElement("form");
+      editColumnForm.className = "form-popup-add-column";
+      editColumnForm.setAttribute("method", "get");
+      editColumnForm.setAttribute("action", "/editColumn");
+      editColumnForm.setAttribute("id", "editColumnForm" + columnTitle);
+
+      var oldHiddenTitle = document.createElement('input');
+      oldHiddenTitle.setAttribute("type", "hidden");
+      oldHiddenTitle.setAttribute("value",  columnTitle);
+      oldHiddenTitle.setAttribute("name", "oldColumnTitle");
+      editColumnForm.appendChild(oldHiddenTitle);
+
+      var columnOldTitle = document.createElement('input');
+      columnOldTitle.setAttribute("type", "text");
+      columnOldTitle.setAttribute("name", "columnTitle");
+      columnOldTitle.setAttribute("value", columnTitle);
+      editColumnForm.appendChild(columnOldTitle);
+
+      var columnState = document.createElement('select');
+      columnState.setAttribute("name", "columnState");
+      var optInCorso = document.createElement("option");
+      optInCorso.value = "in corso";
+      optInCorso.text = "in corso";
+      columnState.appendChild(optInCorso);
+      var optArchiviato = document.createElement("option");
+      optArchiviato.value = "archiviato";
+      optArchiviato.text = "archiviato";
+      columnState.appendChild(optArchiviato);
+      editColumnForm.appendChild(columnState);
+
+      var submit = document.createElement('button');
+      submit.className = 'btn-add-tile';
+      submit.setAttribute("type", "submit");
+      submit.setAttribute("onclick", "closeEditColumnForm(\"" + columnTitle +"\")");
+      submit.innerHTML = "Conferma Modifiche";
+      editColumnForm.appendChild(submit);
+
+      var cancel = document.createElement('button');
+      cancel.className = 'btn-delete-column';
+      cancel.setAttribute("onclick", "closeEditColumnForm(\"" + columnTitle +"\")");
+      cancel.setAttribute("type", "button");
+      cancel.innerHTML = "Annulla";
+      editColumnForm.appendChild(cancel);
+
+      document.getElementById("view").appendChild(editColumnForm);
+      document.getElementById("editColumnForm" + columnTitle).style.display = "block";
     }
 
-    function closeEditColumnForm(){
-      document.getElementById("editColumnForm").style.display = "none";
+    function closeEditColumnForm(columnTitle){
+      document.getElementById("editColumnForm" + columnTitle).style.display = "none";
     }

@@ -299,7 +299,7 @@ a {
   top:50%;
   left:50%;
   width:300px;  /* adjust as per your needs */
-  height:250px;   /* adjust as per your needs */
+  height:300px;   /* adjust as per your needs */
   margin-left:-150px;   /* negative half of width above */
-  margin-top:-125px;   /* negative half of height above */
+  margin-top:-150px;   /* negative half of height above */
 }
