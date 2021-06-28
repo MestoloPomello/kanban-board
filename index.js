@@ -95,6 +95,17 @@ app.get('/editColumn', function(req, res) {
   }
 })
 
+app.get('/editTile', function(req, res) {
+  db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
+    + 'WHERE id=?').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
+    req.query.tileMessageType, req.query.tileColumnSelect, req.query.id);
+
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
+})
+
 
 /**
  * Server Activation
