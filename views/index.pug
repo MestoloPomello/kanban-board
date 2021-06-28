@@ -81,9 +81,10 @@ block layout-content
           else 
             newTile.className = 'tile-informativo';
           newTile.setAttribute("id", "tile_" + tile.id);
-          newTile.setAttribute("onclick", "openEditTileForm(\""
-            + tile.id + "\",\"" + tile.titolo + "\",\"" + tile.autore + "\",\"" + tile.contenuto + "\",\""
-            + tile.tipo_messaggio + "\",\"" + tile.tipo_contenuto + "\",\"" + tile.titoloColonna + "\")");
+          if (type === 'in corso')
+            newTile.setAttribute("onclick", "openEditTileForm(\""
+              + tile.id + "\",\"" + tile.titolo + "\",\"" + tile.autore + "\",\"" + tile.contenuto + "\",\""
+              + tile.tipo_messaggio + "\",\"" + tile.tipo_contenuto + "\",\"" + tile.titoloColonna + "\")");
 
           newTile.innerHTML = 
             '<b>Titolo:</b> ' + tile.titolo +
@@ -351,6 +352,13 @@ block layout-content
       tileSubmit.innerHTML = "Conferma Modifiche";
       editTileForm.appendChild(tileSubmit);
 
+      var tileDelete = document.createElement('button');
+      tileDelete.className = 'btn-delete-column';
+      tileDelete.setAttribute("onclick", "deleteTile(\"" + tileID +"\")");
+      tileDelete.setAttribute("type", "button");
+      tileDelete.innerHTML = "Cancella Tile";
+      editTileForm.appendChild(tileDelete);
+
       var tileCancel = document.createElement('button');
       tileCancel.className = 'btn-delete-column';
       tileCancel.setAttribute("onclick", "closeEditTileForm(\"" + tileID +"\")");
@@ -364,4 +372,12 @@ block layout-content
 
     function closeEditTileForm(tileID){
       document.getElementById("editTileForm" + tileID).style.display = "none";
+    }
+
+    function deleteTile(tileID){
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", '/deleteTile?tileID=' + tileID);
+      xmlHttp.send(null);
+      closeEditTileForm(tileID);
+      window.location.replace("/");
     }
