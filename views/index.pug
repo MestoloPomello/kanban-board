@@ -39,13 +39,6 @@ block layout-content
       loadColumns();
     });
 
-    function addNewTile(column, title, author, content_type, message_type, content){
-      var inputElem = document.createElement('tile');
-      inputElem.id = 'tile' + tileNum;
-      inputElem.nodeName = 'tile' + tileNum;
-      tileNum++;
-    }
-
     function addNewColumn(title, type){
       if (type === 'in corso'){
         var strContainer = 'con_inCorso';
@@ -83,7 +76,10 @@ block layout-content
       tileList.forEach(tile => {
         if (tile.titoloColonna === title){
           var newTile = document.createElement('li');
-          newTile.className = 'tile';
+          if (tile.tipo_messaggio === 'organizzativo')
+            newTile.className = 'tile-organizzativo';
+          else 
+            newTile.className = 'tile-informativo';
           newTile.setAttribute("id", "tile_" + tile.id)
 
           newTile.innerHTML = 

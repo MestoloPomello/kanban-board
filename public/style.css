@@ -214,10 +214,36 @@ a {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   margin-bottom: 10px;
-  cursor: grab;
+  cursor: pointer;
 }
 
 .tile:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tile-informativo {
+  padding: 20px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(137, 255, 122);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.tile-informativo:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tile-organizzativo {
+  padding: 20px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgb(87, 220, 253);
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.tile-organizzativo:hover {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
