@@ -5,6 +5,7 @@
 const database = require("better-sqlite3");
 const express = require("express");
 const path = require("path");
+const { debugPort } = require("process");
 const pug = require("pug");  
 
 
@@ -77,6 +78,42 @@ app.get('/deleteColumn', function(req, res) {
     tiles: JSON.stringify(qryTiles) });
 })
 
+app.get('/editColumn', function(req, res) {
+  try{
+    db.prepare('UPDATE columns SET titolo=?, stato=? WHERE titolo=?')
+      .run(req.query.columnTitle, req.query.columnState, req.query.oldColumnTitle);
+    db.prepare('UPDATE tiles SET titoloColonna=? WHERE titoloColonna=?')
+      .run(req.query.columnTitle, req.query.oldColumnTitle);
+  } catch (error){
+    console.log('Attenzione: il nome della colonna dev\'essere univoco.');
+  }
+  finally{
+    var qryColumns = db.prepare('SELECT * FROM columns').all();
+    var qryTiles = db.prepare('SELECT * FROM tiles').all();
+    res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+      tiles: JSON.stringify(qryTiles) });
+  }
+})
+
+app.get('/editTile', function(req, res) {
+  db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
+    + 'WHERE id=?').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
+    req.query.tileMessageType, req.query.tileColumnSelect, req.query.id);
+
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
+})
+
+app.get('/deleteTile', function(req, res) {
+  db.prepare('DELETE FROM tiles WHERE id=?').run(req.query.tileID);
+
+  var qryColumns = db.prepare('SELECT * FROM columns').all();
+  var qryTiles = db.prepare('SELECT * FROM tiles').all();
+  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
+    tiles: JSON.stringify(qryTiles) });
+})
 
 /**
  * Server Activation

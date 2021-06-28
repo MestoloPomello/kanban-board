@@ -39,13 +39,6 @@ block layout-content
       loadColumns();
     });
 
-    function addNewTile(column, title, author, content_type, message_type, content){
-      var inputElem = document.createElement('tile');
-      inputElem.id = 'tile' + tileNum;
-      inputElem.nodeName = 'tile' + tileNum;
-      tileNum++;
-    }
-
     function addNewColumn(title, type){
       if (type === 'in corso'){
         var strContainer = 'con_inCorso';
@@ -83,14 +76,21 @@ block layout-content
       tileList.forEach(tile => {
         if (tile.titoloColonna === title){
           var newTile = document.createElement('li');
-          newTile.className = 'tile';
-          newTile.setAttribute("id", "tile_" + tile.id)
+          if (tile.tipo_messaggio === 'organizzativo')
+            newTile.className = 'tile-organizzativo';
+          else 
+            newTile.className = 'tile-informativo';
+          newTile.setAttribute("id", "tile_" + tile.id);
+          if (type === 'in corso')
+            newTile.setAttribute("onclick", "openEditTileForm(\""
+              + tile.id + "\",\"" + tile.titolo + "\",\"" + tile.autore + "\",\"" + tile.contenuto + "\",\""
+              + tile.tipo_messaggio + "\",\"" + tile.tipo_contenuto + "\",\"" + tile.titoloColonna + "\")");
 
           newTile.innerHTML = 
             '<b>Titolo:</b> ' + tile.titolo +
             '<br><b>Autore:</b> ' + tile.autore +
             '<br><b>Contenuto:</b> ' + tile.contenuto +
-            '<br><b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;
+            '<br><b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;          
 
           newList.appendChild(newTile);
         }
@@ -104,17 +104,11 @@ block layout-content
       newHiddenTitle.setAttribute("value", title);
       newHiddenTitle.setAttribute("name", "tileColumnTitle");
 
-      var newEditForm = document.createElement('form');
-      newEditForm.setAttribute("method", "get");
-      newEditForm.setAttribute("action", "/editColumn");
-      newEditForm.appendChild(newHiddenTitle);
-
       var newEditColumnButton = document.createElement('button');
       newEditColumnButton.className = 'btn-edit-column';
       newEditColumnButton.setAttribute("id", "btn_edit_" + title);
-      newEditColumnButton.setAttribute("type", "submit");
+      newEditColumnButton.setAttribute("onclick", "openEditColumnForm(\""+ title +"\")");
       newEditColumnButton.innerHTML = 'Modifica Colonna';
-      newEditForm.appendChild(newEditColumnButton);     
 
       if (type === 'in corso'){
         var newAddForm = document.createElement('button');
@@ -123,7 +117,7 @@ block layout-content
         newAddForm.innerHTML = "Aggiungi Tile";    
         newColumn.appendChild(newAddForm);
 
-        newColumn.appendChild(newEditForm);
+        newColumn.appendChild(newEditColumnButton);
 
         var newDeleteForm = document.createElement('form');
         newDeleteForm.setAttribute("method", "get");
@@ -141,7 +135,7 @@ block layout-content
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  
       else{
-        newColumn.appendChild(newEditForm);
+        newColumn.appendChild(newEditColumnButton);
         container.appendChild(newColumn);
       }
     }
@@ -175,6 +169,10 @@ block layout-content
       hiddenTitle.setAttribute("name", "tileColumnTitle");
       addTileForm.appendChild(hiddenTitle);
 
+      var addTileH2 = document.createElement('h2');
+      addTileH2.innerHTML = "<center>Aggiungi Tile</center><br>";
+      addTileForm.appendChild(addTileH2);
+
       var tileTitle = document.createElement('input');
       tileTitle.setAttribute("type", "text");
       tileTitle.setAttribute("name", "tileTitle");
@@ -187,8 +185,8 @@ block layout-content
       tileAuthor.setAttribute("placeholder", "Autore");
       addTileForm.appendChild(tileAuthor); 
 
-      var tileContent = document.createElement('input');
-      tileContent.setAttribute("type", "text");
+      var tileContent = document.createElement('textarea');
+      tileContent.setAttribute("rows", "5");
       tileContent.setAttribute("name", "tileContent");
       tileContent.setAttribute("placeholder", "Contenuto");
       addTileForm.appendChild(tileContent); 
@@ -227,10 +225,159 @@ block layout-content
       document.getElementById("addTileForm" + columnTitle).style.display = "none";
     }
 
-    function openEditColumnForm(){
-      document.getElementById("editColumnForm").style.display = "none";
+    function openEditColumnForm(columnTitle){
+      var editColumnForm = document.createElement("form");
+      editColumnForm.className = "form-popup-add-column";
+      editColumnForm.setAttribute("method", "get");
+      editColumnForm.setAttribute("action", "/editColumn");
+      editColumnForm.setAttribute("id", "editColumnForm" + columnTitle);
+
+      var oldHiddenTitle = document.createElement('input');
+      oldHiddenTitle.setAttribute("type", "hidden");
+      oldHiddenTitle.setAttribute("value",  columnTitle);
+      oldHiddenTitle.setAttribute("name", "oldColumnTitle");
+      editColumnForm.appendChild(oldHiddenTitle);
+
+      var columnOldTitle = document.createElement('input');
+      columnOldTitle.setAttribute("type", "text");
+      columnOldTitle.setAttribute("name", "columnTitle");
+      columnOldTitle.setAttribute("value", columnTitle);
+      editColumnForm.appendChild(columnOldTitle);
+
+      var columnState = document.createElement('select');
+      columnState.setAttribute("name", "columnState");
+      var optInCorso = document.createElement("option");
+      optInCorso.value = "in corso";
+      optInCorso.text = "in corso";
+      columnState.appendChild(optInCorso);
+      var optArchiviato = document.createElement("option");
+      optArchiviato.value = "archiviato";
+      optArchiviato.text = "archiviato";
+      columnState.appendChild(optArchiviato);
+      editColumnForm.appendChild(columnState);
+
+      var submit = document.createElement('button');
+      submit.className = 'btn-add-tile';
+      submit.setAttribute("type", "submit");
+      submit.setAttribute("onclick", "closeEditColumnForm(\"" + columnTitle +"\")");
+      submit.innerHTML = "Conferma Modifiche";
+      editColumnForm.appendChild(submit);
+
+      var cancel = document.createElement('button');
+      cancel.className = 'btn-delete-column';
+      cancel.setAttribute("onclick", "closeEditColumnForm(\"" + columnTitle +"\")");
+      cancel.setAttribute("type", "button");
+      cancel.innerHTML = "Annulla";
+      editColumnForm.appendChild(cancel);
+
+      document.getElementById("view").appendChild(editColumnForm);
+      document.getElementById("editColumnForm" + columnTitle).style.display = "block";
     }
 
-    function closeEditColumnForm(){
-      document.getElementById("editColumnForm").style.display = "none";
+    function closeEditColumnForm(columnTitle){
+      document.getElementById("editColumnForm" + columnTitle).style.display = "none";
+    }
+
+    function openEditTileForm(tileID, tileTitle, tileAuthor, tileContent, tileMessageType, tileContentType, tileColumn){
+      var editTileForm = document.createElement("form");
+      editTileForm.className = "form-popup-add-tile";
+      editTileForm.setAttribute("method", "get");
+      editTileForm.setAttribute("action", "/editTile");
+      editTileForm.setAttribute("id", "editTileForm" + tileID);
+
+      var hiddenID = document.createElement('input');
+      hiddenID.setAttribute("type", "hidden");
+      hiddenID.setAttribute("value", tileID);
+      hiddenID.setAttribute("name", "id");
+      editTileForm.appendChild(hiddenID); 
+
+      var editTileH2 = document.createElement('h2');
+      editTileH2.innerHTML = "<center>Modifica Tile</center><br>";
+      editTileForm.appendChild(editTileH2);
+
+      var tileTitleInput = document.createElement('input');
+      tileTitleInput.setAttribute("type", "text");
+      tileTitleInput.setAttribute("name", "tileTitle");
+      tileTitleInput.setAttribute("value", tileTitle);
+      editTileForm.appendChild(tileTitleInput);
+
+      var tileAuthorInput = document.createElement('input');
+      tileAuthorInput.setAttribute("type", "text");
+      tileAuthorInput.setAttribute("name", "tileAuthor");
+      tileAuthorInput.setAttribute("value", tileAuthor);
+      editTileForm.appendChild(tileAuthorInput); 
+
+      var tileContentInput = document.createElement('textarea');
+      tileContentInput.setAttribute("rows", "5");
+      tileContentInput.setAttribute("name", "tileContent");
+      tileContentInput.value = tileContent;
+      editTileForm.appendChild(tileContentInput); 
+
+      var tileMessageType = document.createElement('select');
+      tileMessageType.setAttribute("name", "tileMessageType");
+      var optOrganizzativo = document.createElement("option");
+      optOrganizzativo.value = "organizzativo";
+      optOrganizzativo.text = "organizzativo";
+      tileMessageType.appendChild(optOrganizzativo);
+      var optInformativo = document.createElement("option");
+      optInformativo.value = "informativo";
+      optInformativo.text = "informativo";
+      tileMessageType.appendChild(optInformativo);
+      editTileForm.appendChild(tileMessageType);
+
+      var tileColumnSelect = document.createElement('select');
+      tileColumnSelect.setAttribute("name", "tileColumnSelect");
+
+      var optStartingColumn = document.createElement("option");
+      optStartingColumn.value = tileColumn;
+      optStartingColumn.text = tileColumn;
+      tileColumnSelect.appendChild(optStartingColumn);
+
+      var columns = "#{columns}";
+      var columnList = JSON.parse(columns.replace(/&quot;/g, '"'));
+      columnList.forEach(column => {
+        if (column.titolo !== tileColumn){
+          var newOpt = document.createElement("option");
+          newOpt.value = column.titolo;
+          newOpt.text = column.titolo;
+          tileColumnSelect.appendChild(newOpt);
+        }
+      })
+      editTileForm.appendChild(tileColumnSelect);
+
+      var tileSubmit = document.createElement('button');
+      tileSubmit.className = 'btn-add-tile';
+      tileSubmit.setAttribute("type", "submit");
+      tileSubmit.setAttribute("onclick", "closeEditTileForm(\"" + tileID +"\")");
+      tileSubmit.innerHTML = "Conferma Modifiche";
+      editTileForm.appendChild(tileSubmit);
+
+      var tileDelete = document.createElement('button');
+      tileDelete.className = 'btn-delete-column';
+      tileDelete.setAttribute("onclick", "deleteTile(\"" + tileID +"\")");
+      tileDelete.setAttribute("type", "button");
+      tileDelete.innerHTML = "Cancella Tile";
+      editTileForm.appendChild(tileDelete);
+
+      var tileCancel = document.createElement('button');
+      tileCancel.className = 'btn-delete-column';
+      tileCancel.setAttribute("onclick", "closeEditTileForm(\"" + tileID +"\")");
+      tileCancel.setAttribute("type", "button");
+      tileCancel.innerHTML = "Annulla";
+      editTileForm.appendChild(tileCancel);
+
+      document.getElementById("view").appendChild(editTileForm);
+      document.getElementById("editTileForm" + tileID).style.display = "block";
+    }
+
+    function closeEditTileForm(tileID){
+      document.getElementById("editTileForm" + tileID).style.display = "none";
+    }
+
+    function deleteTile(tileID){
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", '/deleteTile?tileID=' + tileID);
+      xmlHttp.send(null);
+      closeEditTileForm(tileID);
+      window.location.replace("/");
     }
