@@ -333,14 +333,34 @@ block layout-content
       oldHiddenTitle.setAttribute("name", "oldColumnTitle");
       editColumnForm.appendChild(oldHiddenTitle);
 
+      var editTileH2 = document.createElement('h2');
+      editTileH2.innerHTML = "<center>Modifica Colonna</center><br>";
+      editColumnForm.appendChild(editTileH2);
+
+      var titleLabel = document.createElement('label');
+      titleLabel.htmlFor = 'columnTitle';
+      var titleLabelText = document.createTextNode('Titolo: ');
+      titleLabel.appendChild(titleLabelText);
+      editColumnForm.appendChild(titleLabel);
+
       var columnOldTitle = document.createElement('input');
       columnOldTitle.setAttribute("type", "text");
       columnOldTitle.setAttribute("name", "columnTitle");
+      columnOldTitle.setAttribute("id", "columnTitle");
       columnOldTitle.setAttribute("value", columnTitle);
+      columnOldTitle.className = "textbox";
       editColumnForm.appendChild(columnOldTitle);
+
+      var stateLabel = document.createElement('label');
+      stateLabel.htmlFor = 'columnState';
+      var stateLabelText = document.createTextNode('Stato: ');
+      stateLabel.appendChild(stateLabelText);
+      editColumnForm.appendChild(stateLabel);
 
       var columnState = document.createElement('select');
       columnState.setAttribute("name", "columnState");
+      columnState.setAttribute("id", "columnState");
+      columnState.className = "textbox";
       var optInCorso = document.createElement("option");
       optInCorso.value = "in corso";
       optInCorso.text = "in corso";
