@@ -34,6 +34,7 @@ block layout-content
       
   script.
     
+    var createdTiles = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
       loadColumns();
@@ -185,11 +186,53 @@ block layout-content
       tileAuthor.setAttribute("placeholder", "Autore");
       addTileForm.appendChild(tileAuthor); 
 
+      addTileForm.appendChild(document.createElement("br"));
+
+      var tileMessageText = document.createElement('input');
+      tileMessageText.setAttribute("name", "tileContentType");
+      tileMessageText.setAttribute("id", "message_type_text");
+      tileMessageText.setAttribute("value", "testo");
+      tileMessageText.setAttribute("type", "radio");
+      tileMessageText.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"text\")");
+      addTileForm.appendChild(tileMessageText);
+
+      var textLabel = document.createElement('label');
+      textLabel.htmlFor = 'message_type_text';
+      var textLabelText = document.createTextNode('Testo');
+      textLabel.appendChild(textLabelText);
+      addTileForm.appendChild(textLabel);
+
+      var tileMessageImage = document.createElement('input');
+      tileMessageImage.setAttribute("name", "tileContentType");
+      tileMessageImage.setAttribute("id", "message_type_image");
+      tileMessageImage.setAttribute("value", "immagine");
+      tileMessageImage.setAttribute("type", "radio");
+      tileMessageImage.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"image\")");
+      addTileForm.appendChild(tileMessageImage); 
+
+      var imageLabel = document.createElement('label');
+      imageLabel.htmlFor = 'message_type_image';
+      var imageLabelText = document.createTextNode('Immagine');
+      imageLabel.appendChild(imageLabelText);
+      addTileForm.appendChild(imageLabel);
+
+      // SISTEMARE CHE ARRIVA undefined
       var tileContent = document.createElement('textarea');
       tileContent.setAttribute("rows", "5");
-      tileContent.setAttribute("name", "tileContent");
+      tileContent.setAttribute("name", "tileContentText");
       tileContent.setAttribute("placeholder", "Contenuto");
+      tileContent.setAttribute("id", "textarea_" + createdTiles);
+      tileContent.style.display = "none";
       addTileForm.appendChild(tileContent); 
+
+      var tileImage = document.createElement('input');
+      tileImage.setAttribute("name", "tileContentImage");
+      tileImage.setAttribute("type", "file");
+      tileImage.setAttribute("id", "image_" + createdTiles);
+      tileImage.style.display = "none";
+      addTileForm.appendChild(tileImage);
+
+      createdTiles++;
 
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
@@ -305,13 +348,13 @@ block layout-content
       tileAuthorInput.setAttribute("type", "text");
       tileAuthorInput.setAttribute("name", "tileAuthor");
       tileAuthorInput.setAttribute("value", tileAuthor);
-      editTileForm.appendChild(tileAuthorInput); 
+      editTileForm.appendChild(tileAuthorInput);
 
       var tileContentInput = document.createElement('textarea');
       tileContentInput.setAttribute("rows", "5");
       tileContentInput.setAttribute("name", "tileContent");
       tileContentInput.value = tileContent;
-      editTileForm.appendChild(tileContentInput); 
+      editTileForm.appendChild(tileContentInput);
 
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
@@ -380,4 +423,15 @@ block layout-content
       xmlHttp.send(null);
       closeEditTileForm(tileID);
       window.location.replace("/");
+    }
+
+    function setMessageType(tileLocalID, type){
+      if (type === 'text'){
+        document.getElementById("image_" + tileLocalID).style.display = "none";
+        document.getElementById("textarea_" + tileLocalID).style.display = "block";
+      }
+      else {
+        document.getElementById("textarea_" + tileLocalID).style.display = "none";
+        document.getElementById("image_" + tileLocalID).style.display = "block";
+      }
     }

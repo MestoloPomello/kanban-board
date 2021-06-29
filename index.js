@@ -50,32 +50,28 @@ app.get('/addNewColumn', function(req, res) {
     console.log('Attenzione: il nome della colonna dev\'essere univoco.');
   }
   finally{
-    var qryColumns = db.prepare('SELECT * FROM columns').all();
-    var qryTiles = db.prepare('SELECT * FROM tiles').all();
-    res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-      tiles: JSON.stringify(qryTiles) });
+    res.redirect('/');
   }
 })
 
 app.get('/addNewTile', function(req, res) {
+  if (req.query.tileContentType === 'testo')
+    var tileContentType = req.query.tileContentText;
+  else
+    var tileContentType = req.query.tileContentImage;
+
   db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
     'VALUES (?, ?, ?, ?, ?, ?)').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
-    req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
+    req.query.tileMessageType, tileContentType, req.query.tileColumnTitle);
 
-  var qryColumns = db.prepare('SELECT * FROM columns').all();
-  var qryTiles = db.prepare('SELECT * FROM tiles').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-    tiles: JSON.stringify(qryTiles) });
+  res.redirect('/');
 })
 
 app.get('/deleteColumn', function(req, res) {
   db.prepare('DELETE FROM tiles WHERE titoloColonna=?').run(req.query.tileColumnTitle);
   db.prepare('DELETE FROM columns WHERE titolo=?').run(req.query.tileColumnTitle);
 
-  var qryColumns = db.prepare('SELECT * FROM columns').all();
-  var qryTiles = db.prepare('SELECT * FROM tiles').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-    tiles: JSON.stringify(qryTiles) });
+  res.redirect('/');
 })
 
 app.get('/editColumn', function(req, res) {
@@ -88,10 +84,7 @@ app.get('/editColumn', function(req, res) {
     console.log('Attenzione: il nome della colonna dev\'essere univoco.');
   }
   finally{
-    var qryColumns = db.prepare('SELECT * FROM columns').all();
-    var qryTiles = db.prepare('SELECT * FROM tiles').all();
-    res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-      tiles: JSON.stringify(qryTiles) });
+    res.redirect('/');
   }
 })
 
@@ -100,19 +93,13 @@ app.get('/editTile', function(req, res) {
     + 'WHERE id=?').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
     req.query.tileMessageType, req.query.tileColumnSelect, req.query.id);
 
-  var qryColumns = db.prepare('SELECT * FROM columns').all();
-  var qryTiles = db.prepare('SELECT * FROM tiles').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-    tiles: JSON.stringify(qryTiles) });
+    res.redirect('/');
 })
 
 app.get('/deleteTile', function(req, res) {
   db.prepare('DELETE FROM tiles WHERE id=?').run(req.query.tileID);
 
-  var qryColumns = db.prepare('SELECT * FROM columns').all();
-  var qryTiles = db.prepare('SELECT * FROM tiles').all();
-  res.render("index", { title: "Home" , columns: JSON.stringify(qryColumns),
-    tiles: JSON.stringify(qryTiles) });
+  res.redirect('/');
 })
 
 /**
