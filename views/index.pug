@@ -20,14 +20,12 @@ block layout-content
         h2 Aggiungi Colonna
         br
         | Titolo: 
-        input(type='text', name='colTitle', placeholder='Colonna' required)
-        br
+        input.textbox(type='text', name='colTitle', placeholder='Colonna' required)
         br
         | Stato: 
-        select(name='colType')
+        select.textbox(name='colType')
           option(value='in corso') In Corso
           option(value='archiviato') Archiviato
-        br
         br
         input(type='submit' class='btn-add-tile' value='Crea Colonna' onclick='closeAddColumnForm()')
         input(type='button' class='btn-delete-column' value='Annulla' onclick='closeAddColumnForm()')
@@ -196,16 +194,32 @@ block layout-content
       addTileH2.innerHTML = "<center>Aggiungi Tile</center><br>";
       addTileForm.appendChild(addTileH2);
 
+      var titleLabel = document.createElement('label');
+      titleLabel.htmlFor = 'tileTitle';
+      var titleLabelText = document.createTextNode('Titolo: ');
+      titleLabel.appendChild(titleLabelText);
+      addTileForm.appendChild(titleLabel);
+
       var tileTitle = document.createElement('input');
       tileTitle.setAttribute("type", "text");
       tileTitle.setAttribute("name", "tileTitle");
+      tileTitle.setAttribute("id", "tileTitle");
       tileTitle.setAttribute("placeholder", "Titolo");
+      tileTitle.className = "textbox";
       addTileForm.appendChild(tileTitle);
+
+      var authorLabel = document.createElement('label');
+      authorLabel.htmlFor = 'tileAuthor';
+      var authorLabelText = document.createTextNode('Autore: ');
+      authorLabel.appendChild(authorLabelText);
+      addTileForm.appendChild(authorLabel);
 
       var tileAuthor = document.createElement('input');
       tileAuthor.setAttribute("type", "text");
       tileAuthor.setAttribute("name", "tileAuthor");
+      tileAuthor.setAttribute("id", "tileAuthor");
       tileAuthor.setAttribute("placeholder", "Autore");
+      tileAuthor.className = "textbox";
       addTileForm.appendChild(tileAuthor); 
 
       addTileForm.appendChild(document.createElement("br"));
@@ -215,7 +229,8 @@ block layout-content
       tileMessageText.setAttribute("id", "message_type_text");
       tileMessageText.setAttribute("value", "testo");
       tileMessageText.setAttribute("type", "radio");
-      tileMessageText.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"text\")");
+      tileMessageText.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"text\", \"" 
+        + columnTitle + "\")");
       addTileForm.appendChild(tileMessageText);
 
       var textLabel = document.createElement('label');
@@ -229,7 +244,8 @@ block layout-content
       tileMessageImage.setAttribute("id", "message_type_image");
       tileMessageImage.setAttribute("value", "immagine");
       tileMessageImage.setAttribute("type", "radio");
-      tileMessageImage.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"image\")");
+      tileMessageImage.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"image\", \"" 
+        + columnTitle + "\")");
       addTileForm.appendChild(tileMessageImage); 
 
       var imageLabel = document.createElement('label');
@@ -238,10 +254,14 @@ block layout-content
       imageLabel.appendChild(imageLabelText);
       addTileForm.appendChild(imageLabel);
 
+      addTileForm.appendChild(document.createElement("br"));
+      addTileForm.appendChild(document.createElement("br"));
+
       var tileContent = document.createElement('textarea');
-      tileContent.setAttribute("rows", "5");
+      tileContent.setAttribute("rows", "3");
       tileContent.setAttribute("name", "tileContentText");
       tileContent.setAttribute("placeholder", "Contenuto");
+      tileContent.className = "textbox";
       tileContent.setAttribute("id", "textarea_" + createdTiles);
       tileContent.style.display = "none";
       addTileForm.appendChild(tileContent); 
@@ -250,6 +270,7 @@ block layout-content
       tileImage.setAttribute("name", "tileContentImage");
       tileImage.setAttribute("type", "file");
       tileImage.setAttribute("enctype", "multipart/form-data");
+      tileImage.className = "textbox";
       tileImage.setAttribute("accept", "image/*");
       tileImage.setAttribute("id", "image_" + createdTiles);
       tileImage.style.display = "none";
@@ -257,8 +278,16 @@ block layout-content
 
       createdTiles++;
 
+      var selectLabel = document.createElement('label');
+      selectLabel.htmlFor = 'tileMessageType';
+      var selectLabelText = document.createTextNode('Tipo: ');
+      selectLabel.appendChild(selectLabelText);
+      addTileForm.appendChild(selectLabel);
+
       var tileMessageType = document.createElement('select');
+      tileMessageType.className = "textbox";
       tileMessageType.setAttribute("name", "tileMessageType");
+      tileMessageType.setAttribute("id", "tileMessageType");
       var optOrganizzativo = document.createElement("option");
       optOrganizzativo.value = "organizzativo";
       optOrganizzativo.text = "organizzativo";
@@ -304,14 +333,34 @@ block layout-content
       oldHiddenTitle.setAttribute("name", "oldColumnTitle");
       editColumnForm.appendChild(oldHiddenTitle);
 
+      var editTileH2 = document.createElement('h2');
+      editTileH2.innerHTML = "<center>Modifica Colonna</center><br>";
+      editColumnForm.appendChild(editTileH2);
+
+      var titleLabel = document.createElement('label');
+      titleLabel.htmlFor = 'columnTitle';
+      var titleLabelText = document.createTextNode('Titolo: ');
+      titleLabel.appendChild(titleLabelText);
+      editColumnForm.appendChild(titleLabel);
+
       var columnOldTitle = document.createElement('input');
       columnOldTitle.setAttribute("type", "text");
       columnOldTitle.setAttribute("name", "columnTitle");
+      columnOldTitle.setAttribute("id", "columnTitle");
       columnOldTitle.setAttribute("value", columnTitle);
+      columnOldTitle.className = "textbox";
       editColumnForm.appendChild(columnOldTitle);
+
+      var stateLabel = document.createElement('label');
+      stateLabel.htmlFor = 'columnState';
+      var stateLabelText = document.createTextNode('Stato: ');
+      stateLabel.appendChild(stateLabelText);
+      editColumnForm.appendChild(stateLabel);
 
       var columnState = document.createElement('select');
       columnState.setAttribute("name", "columnState");
+      columnState.setAttribute("id", "columnState");
+      columnState.className = "textbox";
       var optInCorso = document.createElement("option");
       optInCorso.value = "in corso";
       optInCorso.text = "in corso";
@@ -346,11 +395,14 @@ block layout-content
 
     function openEditTileForm(tileID, tileTitle, tileAuthor, tileContent, tileMessageType, tileContentType, tileColumn){
       var editTileForm = document.createElement("form");
-      editTileForm.className = "form-popup-add-tile";
       editTileForm.setAttribute("method", "post");
       editTileForm.setAttribute("action", "/editTile");
       editTileForm.setAttribute("enctype", "multipart/form-data");
       editTileForm.setAttribute("id", "editTileForm" + tileID);
+      if (tileContentType === 'testo')
+        editTileForm.className = "form-popup-edit-tile-text";
+      else 
+        editTileForm.className = "form-popup-edit-tile-image";
 
       var hiddenID = document.createElement('input');
       hiddenID.setAttribute("type", "hidden");
@@ -358,27 +410,51 @@ block layout-content
       hiddenID.setAttribute("name", "id");
       editTileForm.appendChild(hiddenID); 
 
+      var hiddenType = document.createElement('input');
+      hiddenType.setAttribute("type", "hidden");
+      hiddenType.setAttribute("value", tileContentType);
+      hiddenType.setAttribute("name", "tileContentType");
+      editTileForm.appendChild(hiddenType); 
+
       var editTileH2 = document.createElement('h2');
       editTileH2.innerHTML = "<center>Modifica Tile</center><br>";
       editTileForm.appendChild(editTileH2);
 
+      var titleLabel = document.createElement('label');
+      titleLabel.htmlFor = 'tileTitle';
+      var titleLabelText = document.createTextNode('Titolo: ');
+      titleLabel.appendChild(titleLabelText);
+      editTileForm.appendChild(titleLabel);
+
       var tileTitleInput = document.createElement('input');
       tileTitleInput.setAttribute("type", "text");
       tileTitleInput.setAttribute("name", "tileTitle");
+      tileTitleInput.setAttribute("id", "tileTitle");
       tileTitleInput.setAttribute("value", tileTitle);
+      tileTitleInput.className = "textbox";
       editTileForm.appendChild(tileTitleInput);
+
+      var authorLabel = document.createElement('label');
+      authorLabel.htmlFor = 'tileTitle';
+      var authorLabelText = document.createTextNode('Autore: ');
+      authorLabel.appendChild(authorLabelText);
+      editTileForm.appendChild(authorLabel);
 
       var tileAuthorInput = document.createElement('input');
       tileAuthorInput.setAttribute("type", "text");
       tileAuthorInput.setAttribute("name", "tileAuthor");
+      tileAuthorInput.setAttribute("id", "tileAuthor");
       tileAuthorInput.setAttribute("value", tileAuthor);
+      tileAuthorInput.className = "textbox";
       editTileForm.appendChild(tileAuthorInput);
 
       if (tileContentType === 'testo'){
         var tileContentInput = document.createElement('textarea');
-        tileContentInput.setAttribute("rows", "5");
+        tileContentInput.setAttribute("rows", "3");
         tileContentInput.setAttribute("name", "tileContent");
+        tileContentInput.setAttribute("id", "tileContent");
         tileContentInput.value = tileContent;
+        tileContentInput.className = "textbox";
         editTileForm.appendChild(tileContentInput);
       }
       else {
@@ -387,11 +463,22 @@ block layout-content
         tileImage.setAttribute("type", "file");
         tileImage.setAttribute("accept", "image/*");
         tileImage.setAttribute("id", "image_" + tileID);
+        tileImage.className = "textbox";
         editTileForm.appendChild(tileImage);
       }
 
+      editTileForm.appendChild(document.createElement("br"));
+      
+      var typeLabel = document.createElement('label');
+      typeLabel.htmlFor = 'tileMessageType';
+      var typeLabelText = document.createTextNode('Tipo: ');
+      typeLabel.appendChild(typeLabelText);
+      editTileForm.appendChild(typeLabel);
+
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
+      tileMessageType.setAttribute("id", "tileMessageType");
+      tileMessageType.className = "textbox";
       var optOrganizzativo = document.createElement("option");
       optOrganizzativo.value = "organizzativo";
       optOrganizzativo.text = "organizzativo";
@@ -402,8 +489,18 @@ block layout-content
       tileMessageType.appendChild(optInformativo);
       editTileForm.appendChild(tileMessageType);
 
+      editTileForm.appendChild(document.createElement("br"));
+
+      var columnLabel = document.createElement('label');
+      columnLabel.htmlFor = 'tileColumnSelect';
+      var columnLabelText = document.createTextNode('Colonna: ');
+      columnLabel.appendChild(columnLabelText);
+      editTileForm.appendChild(columnLabel);
+
       var tileColumnSelect = document.createElement('select');
       tileColumnSelect.setAttribute("name", "tileColumnSelect");
+      tileColumnSelect.setAttribute("id", "tileColumnSelect");
+      tileColumnSelect.className = "textbox"; 
 
       var optStartingColumn = document.createElement("option");
       optStartingColumn.value = tileColumn;
@@ -459,13 +556,15 @@ block layout-content
       window.location.replace("/");
     }
 
-    function setMessageType(tileLocalID, type){
+    function setMessageType(tileLocalID, type, columnTitle){
       if (type === 'text'){
         document.getElementById("image_" + tileLocalID).style.display = "none";
         document.getElementById("textarea_" + tileLocalID).style.display = "block";
+        document.getElementById("addTileForm" + columnTitle).className = "form-popup-add-tile-text";
       }
       else {
         document.getElementById("textarea_" + tileLocalID).style.display = "none";
         document.getElementById("image_" + tileLocalID).style.display = "block";
+        document.getElementById("addTileForm" + columnTitle).className = "form-popup-add-tile-image";
       }
     }

@@ -288,9 +288,9 @@ p {
   top:50%;
   left:50%;
   width:300px;  /* adjust as per your needs */
-  height:250px;   /* adjust as per your needs */
+  height:260px;   /* adjust as per your needs */
   margin-left:-150px;   /* negative half of width above */
-  margin-top:-125px;   /* negative half of height above */
+  margin-top:-130px;   /* negative half of height above */
 }
 
 .form-popup-add-tile {
@@ -305,7 +305,83 @@ p {
   top:50%;
   left:50%;
   width:300px;  /* adjust as per your needs */
-  height:300px;   /* adjust as per your needs */
+  height:350px;   /* adjust as per your needs */
   margin-left:-150px;   /* negative half of width above */
-  margin-top:-150px;   /* negative half of height above */
+  margin-top:-175px;   /* negative half of height above */
+}
+
+.form-popup-add-tile-text {
+  display: none;
+  margin: auto;
+  border: 1px solid #afafaf;
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 20px;
+
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:300px;  /* adjust as per your needs */
+  height:420px;   /* adjust as per your needs */
+  margin-left:-150px;   /* negative half of width above */
+  margin-top:-210px;   /* negative half of height above */
+}
+
+.form-popup-add-tile-image {
+  display: none;
+  margin: auto;
+  border: 1px solid #afafaf;
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 20px;
+
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:320px;  /* adjust as per your needs */
+  height:400px;   /* adjust as per your needs */
+  margin-left:-160px;   /* negative half of width above */
+  margin-top:-200px;   /* negative half of height above */
+}
+
+.form-popup-edit-tile-text {
+  display: none;
+  margin: auto;
+  border: 1px solid #afafaf;
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 20px;
+
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:300px;  /* adjust as per your needs */
+  height:470px;   /* adjust as per your needs */
+  margin-left:-150px;   /* negative half of width above */
+  margin-top:-235px;   /* negative half of height above */
+}
+
+.form-popup-edit-tile-image {
+  display: none;
+  margin: auto;
+  border: 1px solid #afafaf;
+  border-radius: 4px;
+  background-color: #eee;
+  padding: 20px;
+
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:320px;  /* adjust as per your needs */
+  height:440px;   /* adjust as per your needs */
+  margin-left:-160px;   /* negative half of width above */
+  margin-top:-220px;   /* negative half of height above */
+}
+
+.textbox {
+  padding: 7px 10px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-bottom: 10px;
 }

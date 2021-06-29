@@ -62,15 +62,15 @@ app.get('/addNewColumn', function(req, res) {
 })
 
 app.post('/addNewTile', upload.single("tileContentImage"), (req, res) => {
-  const tempPath = req.file.path;
-  const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
-    + path.extname(req.file.originalname).toLowerCase());
-  fs.rename(tempPath, targetPath, err => { });
-
   if (req.body.tileContentType === 'testo')
     var content = req.body.tileContentText;
-  else
+  else {
     var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
+      + path.extname(req.file.originalname).toLowerCase());
+    fs.rename(tempPath, targetPath, err => { });
+  }
   console.log(content);
   db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
     'VALUES (?, ?, ?, ?, ?, ?)').run(req.body.tileTitle, req.body.tileAuthor, content,
@@ -101,15 +101,15 @@ app.get('/editColumn', function(req, res) {
 })
 
 app.post('/editTile', upload.single("tileContentImage"), (req, res) => {
-  const tempPath = req.file.path;
-  const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
-    + path.extname(req.file.originalname).toLowerCase());
-  fs.rename(tempPath, targetPath, err => { });
-
   if (req.body.tileContentType === 'testo')
-    var content = req.body.tileContentText;
-  else
+    var content = req.body.tileContent;
+  else {
     var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
+    const tempPath = req.file.path;
+    const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
+     + path.extname(req.file.originalname).toLowerCase());
+    fs.rename(tempPath, targetPath, err => { });
+  }
   db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
       + 'WHERE id=?').run(req.body.tileTitle, req.body.tileAuthor, content,
       req.body.tileMessageType, req.body.tileColumnSelect, req.body.id);
