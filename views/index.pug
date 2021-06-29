@@ -34,6 +34,7 @@ block layout-content
       
   script.
     
+    var createdTiles = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
       loadColumns();
@@ -86,12 +87,18 @@ block layout-content
               + tile.id + "\",\"" + tile.titolo + "\",\"" + tile.autore + "\",\"" + tile.contenuto + "\",\""
               + tile.tipo_messaggio + "\",\"" + tile.tipo_contenuto + "\",\"" + tile.titoloColonna + "\")");
 
-          newTile.innerHTML = 
-            '<b>Titolo:</b> ' + tile.titolo +
-            '<br><b>Autore:</b> ' + tile.autore +
-            '<br><b>Contenuto:</b> ' + tile.contenuto +
-            '<br><b>Tipo Messaggio:</b> ' + tile.tipo_messaggio;          
-
+          if (tile.tipo_contenuto === 'testo'){
+            newTile.innerHTML = 
+              '<b><center>' + tile.titolo + '</center></b><hr>' + tile.contenuto +
+              '<hr><table width=100%><tr><td><font color="grey" size=2>' + tile.autore + '</font></td>' 
+              + '<td><p align="right"><font size=2>' + tile.tipo_messaggio + '</font></p></td></tr></table>';
+          }
+          else {     
+            newTile.innerHTML =
+              '<b><center>' + tile.titolo + '</center></b><hr><div class="kanban"><img src="./loadImage?imageName=' + tile.contenuto +
+              '"/></div><hr><table width=100%><tr><td><font color="grey" size=2>' + tile.autore + '</font></td>' 
+              + '<td><p align="right"><font size=2>' + tile.tipo_messaggio + '</font></p></td></tr></table>';
+          }
           newList.appendChild(newTile);
         }
       })
@@ -108,16 +115,13 @@ block layout-content
       newEditColumnButton.className = 'btn-edit-column';
       newEditColumnButton.setAttribute("id", "btn_edit_" + title);
       newEditColumnButton.setAttribute("onclick", "openEditColumnForm(\""+ title +"\")");
-      newEditColumnButton.innerHTML = 'Modifica Colonna';
+      newEditColumnButton.innerHTML = 'Modifica';
 
       if (type === 'in corso'){
         var newAddForm = document.createElement('button');
         newAddForm.setAttribute("onclick", "openAddTileForm(\"" + title + "\")");
         newAddForm.className = 'btn-add-tile';
-        newAddForm.innerHTML = "Aggiungi Tile";    
-        newColumn.appendChild(newAddForm);
-
-        newColumn.appendChild(newEditColumnButton);
+        newAddForm.innerHTML = "Nuovo Tile";
 
         var newDeleteForm = document.createElement('form');
         newDeleteForm.setAttribute("method", "get");
@@ -128,9 +132,27 @@ block layout-content
         newDeleteColumnButton.className = 'btn-delete-column';
         newDeleteColumnButton.setAttribute("id", "btn_delete_" + title);
         newDeleteColumnButton.setAttribute("type", "submit");
-        newDeleteColumnButton.innerHTML = 'Rimuovi Colonna';
+        newDeleteColumnButton.innerHTML = 'Rimuovi';
         newDeleteForm.appendChild(newDeleteColumnButton);
-        newColumn.appendChild(newDeleteForm);
+
+        var newTable = document.createElement('table');
+        newTable.setAttribute("width", "100%");
+
+        var row = document.createElement('tr');
+
+        var td1 = document.createElement('td');
+        td1.appendChild(newAddForm);
+        row.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.appendChild(newEditColumnButton);
+        row.appendChild(td2);
+        var td3 = document.createElement('td');
+        td3.appendChild(newDeleteForm);
+        row.appendChild(td3);        
+
+        newTable.appendChild(row);
+        newColumn.appendChild(newTable);
+
 
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  
@@ -185,11 +207,54 @@ block layout-content
       tileAuthor.setAttribute("placeholder", "Autore");
       addTileForm.appendChild(tileAuthor); 
 
+      addTileForm.appendChild(document.createElement("br"));
+
+      var tileMessageText = document.createElement('input');
+      tileMessageText.setAttribute("name", "tileContentType");
+      tileMessageText.setAttribute("id", "message_type_text");
+      tileMessageText.setAttribute("value", "testo");
+      tileMessageText.setAttribute("type", "radio");
+      tileMessageText.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"text\")");
+      addTileForm.appendChild(tileMessageText);
+
+      var textLabel = document.createElement('label');
+      textLabel.htmlFor = 'message_type_text';
+      var textLabelText = document.createTextNode('Testo');
+      textLabel.appendChild(textLabelText);
+      addTileForm.appendChild(textLabel);
+
+      var tileMessageImage = document.createElement('input');
+      tileMessageImage.setAttribute("name", "tileContentType");
+      tileMessageImage.setAttribute("id", "message_type_image");
+      tileMessageImage.setAttribute("value", "immagine");
+      tileMessageImage.setAttribute("type", "radio");
+      tileMessageImage.setAttribute("onclick", "setMessageType(\"" + createdTiles + "\", \"image\")");
+      addTileForm.appendChild(tileMessageImage); 
+
+      var imageLabel = document.createElement('label');
+      imageLabel.htmlFor = 'message_type_image';
+      var imageLabelText = document.createTextNode('Immagine');
+      imageLabel.appendChild(imageLabelText);
+      addTileForm.appendChild(imageLabel);
+
       var tileContent = document.createElement('textarea');
       tileContent.setAttribute("rows", "5");
-      tileContent.setAttribute("name", "tileContent");
+      tileContent.setAttribute("name", "tileContentText");
       tileContent.setAttribute("placeholder", "Contenuto");
+      tileContent.setAttribute("id", "textarea_" + createdTiles);
+      tileContent.style.display = "none";
       addTileForm.appendChild(tileContent); 
+
+      var tileImage = document.createElement('input');
+      tileImage.setAttribute("name", "tileContentImage");
+      tileImage.setAttribute("type", "file");
+      tileImage.setAttribute("enctype", "multipart/form-data");
+      tileImage.setAttribute("accept", "image/*");
+      tileImage.setAttribute("id", "image_" + createdTiles);
+      tileImage.style.display = "none";
+      addTileForm.appendChild(tileImage);
+
+      createdTiles++;
 
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
@@ -305,13 +370,24 @@ block layout-content
       tileAuthorInput.setAttribute("type", "text");
       tileAuthorInput.setAttribute("name", "tileAuthor");
       tileAuthorInput.setAttribute("value", tileAuthor);
-      editTileForm.appendChild(tileAuthorInput); 
+      editTileForm.appendChild(tileAuthorInput);
 
-      var tileContentInput = document.createElement('textarea');
-      tileContentInput.setAttribute("rows", "5");
-      tileContentInput.setAttribute("name", "tileContent");
-      tileContentInput.value = tileContent;
-      editTileForm.appendChild(tileContentInput); 
+
+      if (tileContentType === 'testo'){
+        var tileContentInput = document.createElement('textarea');
+        tileContentInput.setAttribute("rows", "5");
+        tileContentInput.setAttribute("name", "tileContent");
+        tileContentInput.value = tileContent;
+        editTileForm.appendChild(tileContentInput);
+      }
+      else {
+        var tileImage = document.createElement('input');
+        tileImage.setAttribute("name", "tileContent");
+        tileImage.setAttribute("enctype", "multipart/form-data");
+        tileImage.setAttribute("accept", "image/*");
+        tileImage.setAttribute("type", "file");
+        editTileForm.appendChild(tileImage);
+      }
 
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
@@ -380,4 +456,15 @@ block layout-content
       xmlHttp.send(null);
       closeEditTileForm(tileID);
       window.location.replace("/");
+    }
+
+    function setMessageType(tileLocalID, type){
+      if (type === 'text'){
+        document.getElementById("image_" + tileLocalID).style.display = "none";
+        document.getElementById("textarea_" + tileLocalID).style.display = "block";
+      }
+      else {
+        document.getElementById("textarea_" + tileLocalID).style.display = "none";
+        document.getElementById("image_" + tileLocalID).style.display = "block";
+      }
     }

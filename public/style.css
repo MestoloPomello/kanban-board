@@ -54,6 +54,11 @@ a {
   user-select: none;
 }
 
+p {
+  margin-top: 0em;
+  margin-bottom: 0em;
+}
+
 #root {
   display: flex;
   flex-direction: column;
@@ -99,23 +104,6 @@ a {
   
 }
 
-.Message {
-  background: white;
-  padding: 30px;
-  border-bottom: var(--ui-shadow-border);
-  box-shadow: var(--ui-shadow);
-}
-
-.Message > .Title {
-  padding-bottom: 20px;
-}
-
-.Message > .Details {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.5em;
-}
-
 .NavButtons {
   display: flex;
   width: 100%;
@@ -152,14 +140,6 @@ a {
 
 .NavButton:hover {
     background-color: rgb(34, 206, 34);
-}
-
-.NewTileMessage {
-    background: white;
-    padding: 30px;
-    width: 120%;
-    border-bottom: var(--ui-shadow-border);
-    box-shadow: var(--ui-shadow);
 }
 
 .kanban {
