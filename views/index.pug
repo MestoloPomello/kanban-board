@@ -95,7 +95,7 @@ block layout-content
           }
           else {     
             newTile.innerHTML =
-              '<b><center>' + tile.titolo + '</center></b><hr><div class="kanban"><img src="./images/' + tile.contenuto +
+              '<b><center>' + tile.titolo + '</center></b><hr><div class="kanban"><img src="./loadImage?imageName=' + tile.contenuto +
               '"/></div><hr><table width=100%><tr><td><font color="grey" size=2>' + tile.autore + '</font></td>' 
               + '<td><p align="right"><font size=2>' + tile.tipo_messaggio + '</font></p></td></tr></table>';
           }
@@ -115,16 +115,13 @@ block layout-content
       newEditColumnButton.className = 'btn-edit-column';
       newEditColumnButton.setAttribute("id", "btn_edit_" + title);
       newEditColumnButton.setAttribute("onclick", "openEditColumnForm(\""+ title +"\")");
-      newEditColumnButton.innerHTML = 'Modifica Colonna';
+      newEditColumnButton.innerHTML = 'Modifica';
 
       if (type === 'in corso'){
         var newAddForm = document.createElement('button');
         newAddForm.setAttribute("onclick", "openAddTileForm(\"" + title + "\")");
         newAddForm.className = 'btn-add-tile';
-        newAddForm.innerHTML = "Aggiungi Tile";    
-        newColumn.appendChild(newAddForm);
-
-        newColumn.appendChild(newEditColumnButton);
+        newAddForm.innerHTML = "Nuovo Tile";
 
         var newDeleteForm = document.createElement('form');
         newDeleteForm.setAttribute("method", "get");
@@ -135,9 +132,27 @@ block layout-content
         newDeleteColumnButton.className = 'btn-delete-column';
         newDeleteColumnButton.setAttribute("id", "btn_delete_" + title);
         newDeleteColumnButton.setAttribute("type", "submit");
-        newDeleteColumnButton.innerHTML = 'Rimuovi Colonna';
+        newDeleteColumnButton.innerHTML = 'Rimuovi';
         newDeleteForm.appendChild(newDeleteColumnButton);
-        newColumn.appendChild(newDeleteForm);
+
+        var newTable = document.createElement('table');
+        newTable.setAttribute("width", "100%");
+
+        var row = document.createElement('tr');
+
+        var td1 = document.createElement('td');
+        td1.appendChild(newAddForm);
+        row.appendChild(td1);
+        var td2 = document.createElement('td');
+        td2.appendChild(newEditColumnButton);
+        row.appendChild(td2);
+        var td3 = document.createElement('td');
+        td3.appendChild(newDeleteForm);
+        row.appendChild(td3);        
+
+        newTable.appendChild(row);
+        newColumn.appendChild(newTable);
+
 
         container.insertBefore(newColumn, document.getElementById('sep'));    
       }  

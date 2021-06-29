@@ -103,8 +103,8 @@ app.get('/deleteTile', function(req, res) {
   res.redirect('/');
 })
 
-app.get("/images/la_faccia.png", (req, res) => {
-  res.sendFile(path.join(__dirname, "./images/la_faccia.png"));
+app.get("/loadImage", (req, res) => {
+  res.sendFile(path.join(__dirname, "./images/" + req.query.imageName));
 });
 
 /**
