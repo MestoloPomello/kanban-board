@@ -56,13 +56,13 @@ app.get('/addNewColumn', function(req, res) {
 
 app.get('/addNewTile', function(req, res) {
   if (req.query.tileContentType === 'testo')
-    var tileContentType = req.query.tileContentText;
+    var content = req.query.tileContentText;
   else
-    var tileContentType = req.query.tileContentImage;
+    var content = req.query.tileContentImage;
 
   db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
-    'VALUES (?, ?, ?, ?, ?, ?)').run(req.query.tileTitle, req.query.tileAuthor, req.query.tileContent,
-    req.query.tileMessageType, tileContentType, req.query.tileColumnTitle);
+    'VALUES (?, ?, ?, ?, ?, ?)').run(req.query.tileTitle, req.query.tileAuthor, content,
+    req.query.tileMessageType, req.query.tileContentType, req.query.tileColumnTitle);
 
   res.redirect('/');
 })
