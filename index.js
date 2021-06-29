@@ -18,6 +18,7 @@ const port = process.env.PORT || "8080"; // Porta default che usavamo nei lab
 const db = new database(`database/database.db`, { verbose: console.log });
 
 
+
 /**
  *  App Configuration
  */
@@ -101,6 +102,10 @@ app.get('/deleteTile', function(req, res) {
 
   res.redirect('/');
 })
+
+app.get("/images/la_faccia.png", (req, res) => {
+  res.sendFile(path.join(__dirname, "./images/la_faccia.png"));
+});
 
 /**
  * Server Activation
