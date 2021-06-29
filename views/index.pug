@@ -181,8 +181,9 @@ block layout-content
     function openAddTileForm(columnTitle){
       var addTileForm = document.createElement("form");
       addTileForm.className = "form-popup-add-tile";
-      addTileForm.setAttribute("method", "get");
+      addTileForm.setAttribute("method", "post");
       addTileForm.setAttribute("action", "/addNewTile");
+      addTileForm.setAttribute("enctype", "multipart/form-data");
       addTileForm.setAttribute("id", "addTileForm" + columnTitle);
 
       var hiddenTitle = document.createElement('input');
@@ -346,8 +347,9 @@ block layout-content
     function openEditTileForm(tileID, tileTitle, tileAuthor, tileContent, tileMessageType, tileContentType, tileColumn){
       var editTileForm = document.createElement("form");
       editTileForm.className = "form-popup-add-tile";
-      editTileForm.setAttribute("method", "get");
+      editTileForm.setAttribute("method", "post");
       editTileForm.setAttribute("action", "/editTile");
+      editTileForm.setAttribute("enctype", "multipart/form-data");
       editTileForm.setAttribute("id", "editTileForm" + tileID);
 
       var hiddenID = document.createElement('input');
@@ -372,7 +374,6 @@ block layout-content
       tileAuthorInput.setAttribute("value", tileAuthor);
       editTileForm.appendChild(tileAuthorInput);
 
-
       if (tileContentType === 'testo'){
         var tileContentInput = document.createElement('textarea');
         tileContentInput.setAttribute("rows", "5");
@@ -382,10 +383,10 @@ block layout-content
       }
       else {
         var tileImage = document.createElement('input');
-        tileImage.setAttribute("name", "tileContent");
-        tileImage.setAttribute("enctype", "multipart/form-data");
-        tileImage.setAttribute("accept", "image/*");
+        tileImage.setAttribute("name", "tileContentImage");
         tileImage.setAttribute("type", "file");
+        tileImage.setAttribute("accept", "image/*");
+        tileImage.setAttribute("id", "image_" + tileID);
         editTileForm.appendChild(tileImage);
       }
 
