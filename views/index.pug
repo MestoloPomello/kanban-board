@@ -395,11 +395,14 @@ block layout-content
 
     function openEditTileForm(tileID, tileTitle, tileAuthor, tileContent, tileMessageType, tileContentType, tileColumn){
       var editTileForm = document.createElement("form");
-      editTileForm.className = "form-popup-add-tile";
       editTileForm.setAttribute("method", "post");
       editTileForm.setAttribute("action", "/editTile");
       editTileForm.setAttribute("enctype", "multipart/form-data");
       editTileForm.setAttribute("id", "editTileForm" + tileID);
+      if (tileContentType === 'testo')
+        editTileForm.className = "form-popup-edit-tile-text";
+      else 
+        editTileForm.className = "form-popup-edit-tile-image";
 
       var hiddenID = document.createElement('input');
       hiddenID.setAttribute("type", "hidden");
@@ -407,27 +410,51 @@ block layout-content
       hiddenID.setAttribute("name", "id");
       editTileForm.appendChild(hiddenID); 
 
+      var hiddenType = document.createElement('input');
+      hiddenType.setAttribute("type", "hidden");
+      hiddenType.setAttribute("value", tileContentType);
+      hiddenType.setAttribute("name", "tileContentType");
+      editTileForm.appendChild(hiddenType); 
+
       var editTileH2 = document.createElement('h2');
       editTileH2.innerHTML = "<center>Modifica Tile</center><br>";
       editTileForm.appendChild(editTileH2);
 
+      var titleLabel = document.createElement('label');
+      titleLabel.htmlFor = 'tileTitle';
+      var titleLabelText = document.createTextNode('Titolo: ');
+      titleLabel.appendChild(titleLabelText);
+      editTileForm.appendChild(titleLabel);
+
       var tileTitleInput = document.createElement('input');
       tileTitleInput.setAttribute("type", "text");
       tileTitleInput.setAttribute("name", "tileTitle");
+      tileTitleInput.setAttribute("id", "tileTitle");
       tileTitleInput.setAttribute("value", tileTitle);
+      tileTitleInput.className = "textbox";
       editTileForm.appendChild(tileTitleInput);
+
+      var authorLabel = document.createElement('label');
+      authorLabel.htmlFor = 'tileTitle';
+      var authorLabelText = document.createTextNode('Autore: ');
+      authorLabel.appendChild(authorLabelText);
+      editTileForm.appendChild(authorLabel);
 
       var tileAuthorInput = document.createElement('input');
       tileAuthorInput.setAttribute("type", "text");
       tileAuthorInput.setAttribute("name", "tileAuthor");
+      tileAuthorInput.setAttribute("id", "tileAuthor");
       tileAuthorInput.setAttribute("value", tileAuthor);
+      tileAuthorInput.className = "textbox";
       editTileForm.appendChild(tileAuthorInput);
 
       if (tileContentType === 'testo'){
         var tileContentInput = document.createElement('textarea');
-        tileContentInput.setAttribute("rows", "5");
+        tileContentInput.setAttribute("rows", "3");
         tileContentInput.setAttribute("name", "tileContent");
+        tileContentInput.setAttribute("id", "tileContent");
         tileContentInput.value = tileContent;
+        tileContentInput.className = "textbox";
         editTileForm.appendChild(tileContentInput);
       }
       else {
@@ -436,11 +463,22 @@ block layout-content
         tileImage.setAttribute("type", "file");
         tileImage.setAttribute("accept", "image/*");
         tileImage.setAttribute("id", "image_" + tileID);
+        tileImage.className = "textbox";
         editTileForm.appendChild(tileImage);
       }
 
+      editTileForm.appendChild(document.createElement("br"));
+      
+      var typeLabel = document.createElement('label');
+      typeLabel.htmlFor = 'tileMessageType';
+      var typeLabelText = document.createTextNode('Tipo: ');
+      typeLabel.appendChild(typeLabelText);
+      editTileForm.appendChild(typeLabel);
+
       var tileMessageType = document.createElement('select');
       tileMessageType.setAttribute("name", "tileMessageType");
+      tileMessageType.setAttribute("id", "tileMessageType");
+      tileMessageType.className = "textbox";
       var optOrganizzativo = document.createElement("option");
       optOrganizzativo.value = "organizzativo";
       optOrganizzativo.text = "organizzativo";
@@ -451,8 +489,18 @@ block layout-content
       tileMessageType.appendChild(optInformativo);
       editTileForm.appendChild(tileMessageType);
 
+      editTileForm.appendChild(document.createElement("br"));
+
+      var columnLabel = document.createElement('label');
+      columnLabel.htmlFor = 'tileColumnSelect';
+      var columnLabelText = document.createTextNode('Colonna: ');
+      columnLabel.appendChild(columnLabelText);
+      editTileForm.appendChild(columnLabel);
+
       var tileColumnSelect = document.createElement('select');
       tileColumnSelect.setAttribute("name", "tileColumnSelect");
+      tileColumnSelect.setAttribute("id", "tileColumnSelect");
+      tileColumnSelect.className = "textbox"; 
 
       var optStartingColumn = document.createElement("option");
       optStartingColumn.value = tileColumn;
