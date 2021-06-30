@@ -6,8 +6,7 @@ const database = require("better-sqlite3");
 const express = require("express");
 const path = require("path");
 const { debugPort } = require("process");
-const pug = require("pug");  
-const fs = require("fs");
+const pug = require("pug");
 const multer = require("multer");
 const sharp = require("sharp");
 
