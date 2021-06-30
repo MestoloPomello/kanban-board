@@ -9,7 +9,7 @@ const { debugPort } = require("process");
 const pug = require("pug");  
 const fs = require("fs");
 const multer = require("multer");
-
+const sharp = require("sharp");
 
 /**
  * App Variables
@@ -62,19 +62,38 @@ app.get('/addNewColumn', function(req, res) {
 })
 
 app.post('/addNewTile', upload.single("tileContentImage"), (req, res) => {
-  if (req.body.tileContentType === 'testo')
+  if (req.body.tileContentType === 'testo'){
     var content = req.body.tileContentText;
-  else {
-    var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
-    const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
-      + path.extname(req.file.originalname).toLowerCase());
-    fs.rename(tempPath, targetPath, err => { });
+
+    db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
+      'VALUES (?, ?, ?, ?, ?, ?)').run(req.body.tileTitle, req.body.tileAuthor, content,
+      req.body.tileMessageType, req.body.tileContentType, req.body.tileColumnTitle);
   }
-  console.log(content);
-  db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
-    'VALUES (?, ?, ?, ?, ?, ?)').run(req.body.tileTitle, req.body.tileAuthor, content,
-    req.body.tileMessageType, req.body.tileContentType, req.body.tileColumnTitle);
+  else {
+    if (req.file === undefined || req.file === 'undefined'){
+      db.prepare('INSERT INTO tiles (titolo, autore, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
+        'VALUES (?, ?, ?, ?, ?)').run(req.body.tileTitle, req.body.tileAuthor,
+        req.body.tileMessageType, req.body.tileContentType, req.body.tileColumnTitle);
+    }
+    else {
+      var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
+
+      const finalPath = path.join(__dirname, "./images/img" + req.body.tileTitle
+      + path.extname(req.file.originalname).toLowerCase());
+
+      sharp(req.file.path)
+        .resize( { width: 900, height: 900, fit: sharp.fit.contain, withoutEnlargement: true })
+        .toFile(finalPath, (err, info) => { 
+          if (err) {
+              console.error("Errore durante il ridimensionamento dell'immagine: ", err);
+          }
+      });
+
+      db.prepare('INSERT INTO tiles (titolo, autore, contenuto, tipo_messaggio, tipo_contenuto, titoloColonna) ' +
+        'VALUES (?, ?, ?, ?, ?, ?)').run(req.body.tileTitle, req.body.tileAuthor, content,
+        req.body.tileMessageType, req.body.tileContentType, req.body.tileColumnTitle);
+    }
+  }
 
   res.redirect('/');
 })
@@ -101,18 +120,39 @@ app.get('/editColumn', function(req, res) {
 })
 
 app.post('/editTile', upload.single("tileContentImage"), (req, res) => {
-  if (req.body.tileContentType === 'testo')
+  if (req.body.tileContentType === 'testo'){
     var content = req.body.tileContent;
-  else {
-    var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
-    const tempPath = req.file.path;
-    const targetPath = path.join(__dirname, "./images/img" + req.body.tileTitle
-     + path.extname(req.file.originalname).toLowerCase());
-    fs.rename(tempPath, targetPath, err => { });
-  }
-  db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
+
+    db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
       + 'WHERE id=?').run(req.body.tileTitle, req.body.tileAuthor, content,
       req.body.tileMessageType, req.body.tileColumnSelect, req.body.id);
+  }
+  else {
+    if (req.file === undefined || req.file === 'undefined')
+    {
+      db.prepare('UPDATE tiles SET titolo=?, autore=?, tipo_messaggio=?, titoloColonna=? ' 
+        + 'WHERE id=?').run(req.body.tileTitle, req.body.tileAuthor,
+        req.body.tileMessageType, req.body.tileColumnSelect, req.body.id);
+    }
+    else{
+      var content = "img" + req.body.tileTitle + path.extname(req.file.originalname).toLowerCase();
+      
+      const finalPath = path.join(__dirname, "./images/img" + req.body.tileTitle
+      + path.extname(req.file.originalname).toLowerCase());
+
+      sharp(req.file.path)
+        .resize( { width: 900, height: 900, fit: sharp.fit.contain, withoutEnlargement: true })
+        .toFile(finalPath, (err, info) => { 
+          if (err) {
+              console.error("Errore durante il ridimensionamento dell'immagine: ", err);
+          }
+      });
+
+      db.prepare('UPDATE tiles SET titolo=?, autore=?, contenuto=?, tipo_messaggio=?, titoloColonna=? ' 
+      + 'WHERE id=?').run(req.body.tileTitle, req.body.tileAuthor, content,
+      req.body.tileMessageType, req.body.tileColumnSelect, req.body.id);
+    }
+  }
 
   res.redirect('/');
 })
