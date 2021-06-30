@@ -1,7 +1,0 @@
-librerie usate:
-- Express: framework per far girare la web app Node.js
-- Nodemon: gestisce il controllo del codice e riavvia il server in automatico ad ogni cambiamento salvato nei file (comodo per test)
-- Better-sqlite3: libreria per gestire db SQLite3, non quella standard ma un po' migliorata
-- Path: libreria per definire path e accedere a file di stile, immagini ecc.
-
-Note: per avviare "npm run dev" in console, comando creato in package (equivalente a node index.js ma gestito mediante nodemon)
